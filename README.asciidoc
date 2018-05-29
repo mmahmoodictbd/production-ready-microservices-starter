@@ -7,7 +7,7 @@ This is a microservice starter project, which give you all basic microservices, 
 monolithic app easily.
 
 ##### Basic microservices includes -
-* Discovery Service
+* Discovery Service aka service registry
 * Gateway / Edge Service
 * User Accounts and Authentication Service
 
@@ -17,6 +17,26 @@ monolithic app easily.
 * Spring Cloud
 * Spring Data JPA
 * Maven
+
+### How to run
+
+```
+# Build all modules
+mvn clean install
+```
+```
+# Run service registry
+cd service-registry
+mvn spring-boot:run
+```
+```
+# Run gateway
+cd gateway
+mvn spring-boot:run
+```
+```
+# Go to http://localhost:33000/, gateway service should be registered in eureka.
+```
 
 ### Copyright & License
 
