@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: Gateway
+
+server:
+  port: 33001
+
+
+ribbon:
+  eureka:
+    enabled: true
+
+eureka:
+  client:
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:33000/eureka/
+
+      
