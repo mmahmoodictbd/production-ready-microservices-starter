@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: ServiceRegistry
+
+server:
+  port: 33000
+    
+eureka:  
+  instance:
+    hostname: localhost
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+  server:
+    enableSelfPreservation: false  
