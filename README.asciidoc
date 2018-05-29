@@ -7,9 +7,9 @@ This is a microservice starter project, which give you all basic microservices, 
 monolithic app easily.
 
 ##### Basic microservices includes -
-* Discovery Service aka service registry
-* Gateway / Edge Service
-* User Accounts and Authentication Service
+* https://github.com/mmahmoodictbd/microservice-hello-world/blob/master/service-registry/README.asciidoc[Discovery Service] aka service registry
+* https://github.com/mmahmoodictbd/microservice-hello-world/blob/master/gateway/README.asciidoc[Gateway / Edge Service]
+* User Accounts and Authentication Service (TODO)
 
 ### Technologies
 * Java 8
