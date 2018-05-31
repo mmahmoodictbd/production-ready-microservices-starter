@@ -9,7 +9,8 @@ monolithic app easily.
 ##### Basic microservices includes -
 * https://github.com/mmahmoodictbd/microservice-hello-world/blob/master/service-registry/README.asciidoc[Discovery Service] aka service registry
 * https://github.com/mmahmoodictbd/microservice-hello-world/blob/master/gateway/README.asciidoc[Gateway / Edge Service]
-* User Accounts and Authentication Service (TODO)
+* https://github.com/mmahmoodictbd/microservice-hello-world/blob/master/uaa/README.asciidoc[User Accounts and
+Authentication Service] (Work in progress)
 
 ### Technologies
 * Java 8
