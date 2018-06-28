@@ -1,15 +1,15 @@
 
 image:https://img.shields.io/badge/License-MIT-brightgreen.svg["LICENSE", link="https://github.com/mmahmoodictbd/microservice-hello-world/blob/master/LICENSE"]
 
-# Microservice Hello World
+# Production Ready Microservices Starter
 
 This is a microservice starter project, which give you all basic microservices, so that you can break down your 
 monolithic app easily.
 
 ##### Basic microservices includes -
-* https://github.com/mmahmoodictbd/microservice-hello-world/blob/master/service-registry/README.asciidoc[Discovery Service] aka service registry
-* https://github.com/mmahmoodictbd/microservice-hello-world/blob/master/gateway/README.asciidoc[Gateway / Edge Service]
-* https://github.com/mmahmoodictbd/microservice-hello-world/blob/master/uaa/README.asciidoc[User Accounts and
+* https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/service-registry/README.asciidoc[Discovery Service] aka service registry
+* https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/gateway/README.asciidoc[Gateway / Edge Service]
+* https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/uaa/README.asciidoc[User Accounts and
 Authentication Service] (Work in progress)
 
 ### Technologies
