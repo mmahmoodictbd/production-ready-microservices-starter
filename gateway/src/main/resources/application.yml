@@ -1,14 +1,39 @@
-spring:
-  application:
-    name: Gateway
+### Common
 
 server:
   port: 33001
 
-
+spring:
+  application:
+    name: Gateway
+  profiles:
+    active: dev
 ribbon:
   eureka:
     enabled: true
+
+
+---
+
+### Dev profile
+
+spring:
+  profiles: dev
+
+eureka:
+  client:
+    enabled: false
+
+logging:
+  level:
+    com.chumbok: DEBUG
+
+---
+
+### Prod profile
+
+spring:
+  profiles: prod
 
 eureka:
   client:
@@ -16,4 +41,8 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:33000/eureka/
 
-      
+logging:
+  level:
+    com.chumbok: DEBUG
+
+
