@@ -7,10 +7,10 @@ import org.springframework.http.HttpStatus;
 
 import static io.restassured.RestAssured.given;
 
-public class PingControllerTest extends IntegrationTestBase {
+public class PingControllerIT extends IntegrationTestBase {
 
     @Test
-    public void testPing() throws Exception {
+    public void shouldReturnHttpStatus204WhenPing() throws Exception {
 
         Response response = given().get("/ping").andReturn();
 
