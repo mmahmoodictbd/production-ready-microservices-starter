@@ -1,0 +1,41 @@
+
+databaseChangeLog:
+
+  - changeSet:
+      id: create-table-user_roles
+      author: mahmood
+      changes:
+      - createTable:
+          tableName: user_roles
+          columns:
+          - column:
+              name: user_id
+              type: BIGINT
+              constraints:
+                nullable: false
+          - column:
+              name: roles_id
+              type: BIGINT
+              constraints:
+                nullable: false
+
+      - createIndex:
+          indexName: idx_user_roles_user_id_roles_id
+          tableName: user_roles
+          unique: true
+          columns:
+          - column:
+              name: user_id
+              type: BIGINT
+          - column:
+              name: roles_id
+              type: BIGINT
+
+      - createIndex:
+          indexName: idx_user_roles_roles_id
+          tableName: user_roles
+          unique: true
+          columns:
+          - column:
+              name: roles_id
+              type: BIGINT

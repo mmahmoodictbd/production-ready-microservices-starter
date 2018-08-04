@@ -1,0 +1,42 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: create-table-role
+      author: mahmood
+      changes:
+      - createTable:
+          tableName: role
+          columns:
+          - column:
+              name: id
+              type: BIGINT
+              autoIncrement: true
+              constraints:
+                primaryKey: true
+                primaryKeyName: pk_role
+                nullable: false
+          - column:
+              name: role
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: created_by
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: created_at
+              type: datetime(6)
+              constraints:
+                nullable: false
+          - column:
+              name: updated_by
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: updated_at
+              type: datetime(6)
+              constraints:
+                nullable: false

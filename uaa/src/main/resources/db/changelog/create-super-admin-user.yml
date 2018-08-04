@@ -1,0 +1,44 @@
+
+databaseChangeLog:
+
+  - changeSet:
+      id: create-admin-user
+      author: mahmood
+      changes:
+      - insert:
+          tableName: user
+          columns:
+              - column:
+                  name: domain
+                  value: chumbok
+              - column:
+                  name: email
+                  value: admin@chumbok.com
+              - column:
+                  name: password
+                  # Password in plain text: admin
+                  value: $2a$12$5K3yKiTzwcEX0Y8.muZUdOXIyWb9buaN3jLzTjRmCg7DfxMmIhTze
+              - column:
+                  name: first_name
+                  value: Admin
+              - column:
+                  name: last_name
+                  value: User
+              - column:
+                  name: display_name
+                  value: Admin User
+              - column:
+                  name: enabled
+                  valueBoolean: true
+              - column:
+                  name: created_by
+                  value: InitDataLiquibase
+              - column:
+                  name: created_at
+                  valueDate: now()
+              - column:
+                  name: updated_by
+                  value: InitDataLiquibase
+              - column:
+                  name: updated_at
+                  valueDate: now()

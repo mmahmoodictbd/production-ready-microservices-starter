@@ -1,0 +1,25 @@
+databaseChangeLog:
+
+  # Initialize application tables
+
+  - include:
+      file: "classpath:/db/changelog/create-user-table.yml"
+
+  - include:
+      file: "classpath:/db/changelog/create-table-role.yml"
+
+  - include:
+      file: "classpath:/db/changelog/create-table-user-roles.yml"
+
+
+
+  # Init Data
+
+  - include:
+      file: "classpath:/db/changelog/create-basic-roles.yml"
+
+  - include:
+      file: "classpath:/db/changelog/create-super-admin-user.yml"
+
+  - include:
+      file: "classpath:/db/changelog/create-super-admin-user-roles.yml"

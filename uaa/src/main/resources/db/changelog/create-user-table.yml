@@ -1,0 +1,124 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: create-user-table
+      author: mahmood
+      changes:
+      - createTable:
+          tableName: user
+          columns:
+          - column:
+              name: id
+              type: BIGINT
+              autoIncrement: true
+              constraints:
+                primaryKey: true
+                primaryKeyName: pk_user
+                nullable: false
+          - column:
+              name: domain
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: email
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: password
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: first_name
+              type: varchar(255)
+          - column:
+              name: last_name
+              type: varchar(255)
+          - column:
+              name: display_name
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: image_url
+              type: varchar(255)
+          - column:
+              name: timezone_id
+              type: varchar(255)
+          - column:
+              name: preferred_language
+              type: varchar(255)
+          - column:
+              name: enabled
+              type: BOOLEAN
+          - column:
+              name: created_by
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: created_at
+              type: datetime(6)
+              constraints:
+                nullable: false
+          - column:
+              name: updated_by
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: updated_at
+              type: datetime(6)
+              constraints:
+                nullable: false
+      - addUniqueConstraint:
+          tableName: user
+          columnNames: domain, email
+          constraintName: UK_user_domain_email
+      - createIndex:
+          indexName: idx_user_domain_email
+          tableName: user
+          unique: true
+          columns:
+          - column:
+              name: domain
+              type: varchar(255)
+          - column:
+              name: email
+              type: varchar(255)
+
+  - changeSet:
+      id: create-table-user_additional_properties
+      author: mahmood
+      changes:
+      - createTable:
+          tableName: user_additional_properties
+          columns:
+          - column:
+              name: user_id
+              type: BIGINT
+              constraints:
+                nullable: false
+          - column:
+              name: property_key
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: property_value
+              type: varchar(255)
+              constraints:
+                nullable: true
+      - createIndex:
+          indexName: idx_user_user_id_prop_key
+          tableName: user_additional_properties
+          unique: true
+          columns:
+          - column:
+              name: user_id
+              type: BIGINT
+          - column:
+              name: property_key
+              type: varchar(255)

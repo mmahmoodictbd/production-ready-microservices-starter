@@ -1,0 +1,61 @@
+
+databaseChangeLog:
+
+  - changeSet:
+      id: create-basic-roles
+      author: mahmood
+      changes:
+      - insert:
+          tableName: role
+          columns:
+              - column:
+                  name: role
+                  value: SUPERADMIN
+              - column:
+                  name: created_by
+                  value: InitDataLiquibase
+              - column:
+                  name: created_at
+                  valueDate: now()
+              - column:
+                  name: updated_by
+                  value: InitDataLiquibase
+              - column:
+                  name: updated_at
+                  valueDate: now()
+      - insert:
+          tableName: role
+          columns:
+              - column:
+                  name: role
+                  value: ADMIN
+              - column:
+                  name: created_by
+                  value: InitDataLiquibase
+              - column:
+                  name: created_at
+                  valueDate: now()
+              - column:
+                  name: updated_by
+                  value: InitDataLiquibase
+              - column:
+                  name: updated_at
+                  valueDate: now()
+      - insert:
+          tableName: role
+          columns:
+              - column:
+                  name: role
+                  value: USER
+              - column:
+                  name: created_by
+                  value: InitDataLiquibase
+              - column:
+                  name: created_at
+                  valueDate: now()
+              - column:
+                  name: updated_by
+                  value: InitDataLiquibase
+              - column:
+                  name: updated_at
+                  valueDate: now()

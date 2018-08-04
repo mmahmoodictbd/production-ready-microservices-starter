@@ -1,0 +1,20 @@
+
+databaseChangeLog:
+
+  - changeSet:
+      id: create-super-admin-user-roles
+      author: mahmood
+      changes:
+      - insert:
+          tableName: user_roles
+          columns:
+              - column:
+                  name: user_id
+                  # Braces around the SQL is necessary, liquibase could not generate proper MySQL SQL.
+                  # MySQL expects braces around SELECT query in INSERT VALUES.
+                  valueComputed: "(SELECT id FROM user WHERE email = 'admin@chumbok.com')"
+              - column:
+                  name: roles_id
+                  # Braces around the SQL is necessary, liquibase could not generate proper MySQL SQL.
+                  # MySQL expects braces around SELECT query in INSERT VALUES.
+                  valueComputed: "(SELECT id FROM role WHERE role = 'SUPERADMIN')"
