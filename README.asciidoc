@@ -25,19 +25,29 @@ Authentication Service] (Work in progress)
 # Build all modules
 mvn clean install
 ```
+
 ```
 # Run service registry
 cd service-registry
 mvn spring-boot:run
 ```
+
 ```
 # Run gateway
 cd gateway
 mvn spring-boot:run
+# Go to http://localhost:33000/
+# Gateway service should be registered in eureka.
 ```
+
 ```
-# Go to http://localhost:33000/, gateway service should be registered in eureka.
+# Run UAA
+cd uaa
+mvn spring-boot:run
+# Go to http://localhost:33000/
+# Gateway service should be registered in eureka.
 ```
+
 
 ### Copyright & License
 
