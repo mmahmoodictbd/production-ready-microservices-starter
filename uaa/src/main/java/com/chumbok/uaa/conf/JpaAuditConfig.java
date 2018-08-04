@@ -8,10 +8,12 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+import java.util.Optional;
+
 @Configuration
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @EnableJpaAuditing
-public class JpaAuditConfiguration {
+public class JpaAuditConfig {
 
     @Bean
     AuditorAware<String> auditorProvider() {
@@ -26,9 +28,9 @@ public class JpaAuditConfiguration {
     public static class AuditorAwareImpl implements AuditorAware<String> {
 
         @Override
-        public String getCurrentAuditor() {
+        public Optional<String> getCurrentAuditor() {
             //TODO: Get from securityContext when security is ready.
-            return "System";
+            return Optional.of("System");
         }
     }
 }
