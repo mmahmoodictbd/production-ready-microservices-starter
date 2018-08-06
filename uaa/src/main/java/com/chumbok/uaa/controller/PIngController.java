@@ -11,6 +11,6 @@ public class PIngController {
 
     @RequestMapping(value = "/ping", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void connect(){
+    public void connect() {
     }
 }
