@@ -203,6 +203,39 @@
                     </configuration>
                 </plugin>
 
+                <!-- Docker -->
+
+                <plugin>
+                    <groupId>com.spotify</groupId>
+                    <artifactId>docker-maven-plugin</artifactId>
+                    <version>${docker-maven-plugin.version}</version>
+                    <configuration>
+                        <imageName>mmahmood/${project.artifactId}</imageName>
+                        <baseImage>java:8</baseImage>
+                        <entryPoint>["java", "-jar", "/${project.build.finalName}.jar", "-Xdebug
+                            -Xrunjdwp:server=y,transport=dt_socket,suspend=n"]
+                        </entryPoint>
+                        <resources>
+                            <resource>
+                                <targetPath>/</targetPath>
+                                <directory>${project.build.directory}</directory>
+                                <include>${project.build.finalName}.jar</include>
+                            </resource>
+                        </resources>
+                        <serverId>docker-hub</serverId>
+                        <registryUrl>https://index.docker.io/v1/</registryUrl>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>build-image</id>
+                            <phase>deploy</phase>
+                            <goals>
+                                <goal>build</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
             </plugins>
 
         </pluginManagement>
