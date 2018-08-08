@@ -7,7 +7,7 @@ import org.zalando.problem.ProblemModule;
 import org.zalando.problem.validation.ConstraintViolationProblemModule;
 
 @Configuration
-public class ExceptionMapperConfiguration {
+public class ExceptionMapperConfig {
 
     @Bean
     public ObjectMapper objectMapper() {
