@@ -1,10 +1,10 @@
 package com.chumbok.uaa.util;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class DateUtility {
 
-    public Date getCurrentDate() {
-        return new Date();
+    public LocalDateTime getCurrentDate() {
+        return LocalDateTime.now();
     }
 }

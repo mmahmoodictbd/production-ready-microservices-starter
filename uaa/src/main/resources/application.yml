@@ -26,6 +26,14 @@ logging:
   level:
     root: INFO
 
+com:
+  chumbok:
+    uaa:
+      jwt:
+        token-expiration-time-in-second: 300
+        refresh-token-expiration-time-in-second: 1800
+        token-issuer: Chumbok
+        token-signing-key: TokenSigningKeyDoNotUseInProduction!
 
 ---
 
