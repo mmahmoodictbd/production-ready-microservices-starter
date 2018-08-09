@@ -140,7 +140,7 @@
                     <version>${pitest-maven.version}</version>
                     <configuration>
                         <targetClasses>
-                            <param>com.unloadbrain.blog.*</param>
+                            <param>com.chumbok.*</param>
                         </targetClasses>
                     </configuration>
                 </plugin>
