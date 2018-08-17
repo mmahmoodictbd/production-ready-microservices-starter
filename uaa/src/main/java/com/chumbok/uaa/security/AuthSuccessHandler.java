@@ -50,7 +50,8 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
         JwtToken accessToken = jwtTokenFactory.createAccessToken(user.getUsername(), authorities);
         JwtToken refreshToken = jwtTokenFactory.createRefreshToken(user.getUsername());
 
-        if (MediaType.APPLICATION_JSON_VALUE.equalsIgnoreCase(request.getContentType())) {
+        if (MediaType.APPLICATION_JSON_VALUE.equalsIgnoreCase(request.getContentType())
+                || MediaType.APPLICATION_JSON_UTF8_VALUE.equalsIgnoreCase(request.getContentType())) {
 
             Map<String, String> tokenAttribs = new HashMap<>();
             tokenAttribs.put("accessToken", accessToken.getToken());
@@ -60,7 +61,7 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         } else {
-            response.addCookie(new Cookie(AUTH_COOKIE_NAME, accessToken.getToken()));
+            response.addCookie(new Cookie(AUTH_COOKIE_NAME, "Bearer " + accessToken.getToken()));
             response.setContentType(MediaType.TEXT_HTML_VALUE);
         }
 
