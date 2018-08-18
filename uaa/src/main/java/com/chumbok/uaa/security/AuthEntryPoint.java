@@ -13,6 +13,7 @@ import java.io.IOException;
  * This class just returns HTTP code 401 (Unauthorized) when authentication fails,
  * overriding default Spring’s redirecting
  */
+@Deprecated
 @Component
 public class AuthEntryPoint implements org.springframework.security.web.AuthenticationEntryPoint {
 
