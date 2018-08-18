@@ -1,6 +1,5 @@
 package com.chumbok.uaa.conf;
 
-import com.chumbok.uaa.security.AuthEntryPoint;
 import com.chumbok.uaa.security.DomainUsernamePasswordAuthenticationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,35 +23,36 @@ import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
-@Import(SecurityProblemSupport.class)
+
 @Configuration
+@Import(SecurityProblemSupport.class)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final RequestMatcher PUBLIC_URLS =
             new OrRequestMatcher(new AntPathRequestMatcher("/public/*"));
 
-    private AuthEntryPoint authEntryPoint;
+    private SecurityProblemSupport problemSupport;
+
     private UserDetailsService userDetailsService;
     private AuthenticationSuccessHandler authenticationSuccessHandler;
     private AuthenticationFailureHandler authenticationFailureHandler;
     private ObjectMapper objectMapper;
 
-    @Autowired
-    public SecurityConfig(AuthEntryPoint authEntryPoint,
-                          UserDetailsService userDetailsService,
+    public SecurityConfig(UserDetailsService userDetailsService,
                           AuthenticationSuccessHandler authenticationSuccessHandler,
                           AuthenticationFailureHandler authenticationFailureHandler,
+                          SecurityProblemSupport problemSupport,
                           ObjectMapper objectMapper) {
         super();
-        this.authEntryPoint = authEntryPoint;
         this.userDetailsService = userDetailsService;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
         this.authenticationFailureHandler = authenticationFailureHandler;
+        this.problemSupport = problemSupport;
         this.objectMapper = objectMapper;
     }
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+    public void configureGlobal(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(authProvider());
     }
 
@@ -66,7 +66,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable() // We don't need CSRF for JWT based authentication
                 .exceptionHandling()
-                .authenticationEntryPoint(authEntryPoint)
+                .authenticationEntryPoint(problemSupport)
+                .accessDeniedHandler(problemSupport)
 
                 .and()
                 .sessionManagement()
