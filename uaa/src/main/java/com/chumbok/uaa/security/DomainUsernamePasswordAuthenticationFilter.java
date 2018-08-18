@@ -7,6 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +18,7 @@ import java.io.IOException;
  */
 public class DomainUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private String domainParameter = "domain";
+    private final String HTTP_REQUEST_PARAMETER_DOMAIN = "domain";
 
     private ObjectMapper objectMapper;
 
@@ -27,6 +28,7 @@ public class DomainUsernamePasswordAuthenticationFilter extends UsernamePassword
 
     /**
      * Authenticate using merged domain and username as username
+     *
      * @param request
      * @param response
      * @return
@@ -42,7 +44,8 @@ public class DomainUsernamePasswordAuthenticationFilter extends UsernamePassword
 
         LoginRequest loginRequest;
 
-        if (MediaType.APPLICATION_JSON_VALUE.equalsIgnoreCase(request.getContentType())) {
+        if (MediaType.APPLICATION_JSON_VALUE.equalsIgnoreCase(request.getContentType())
+                || MediaType.APPLICATION_JSON_UTF8_VALUE.equalsIgnoreCase(request.getContentType())) {
             try {
                 loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
             } catch (IOException e) {
@@ -56,9 +59,14 @@ public class DomainUsernamePasswordAuthenticationFilter extends UsernamePassword
                     .build();
         }
 
-        String domain = loginRequest.getDomain() == null? "" : loginRequest.getDomain();
-        String username = loginRequest.getUsername() == null? "" : loginRequest.getUsername();
-        String password = loginRequest.getPassword() == null? "" : loginRequest.getPassword();
+        String domain = loginRequest.getDomain() == null ? "" : loginRequest.getDomain();
+        String username = loginRequest.getUsername() == null ? "" : loginRequest.getUsername();
+        String password = loginRequest.getPassword() == null ? "" : loginRequest.getPassword();
+
+        if (StringUtils.isEmpty(domain) || StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
+            throw new AuthenticationServiceException("Missing login request parameter(s). "
+                    + "Must contain domain, username and password parameters.");
+        }
 
         String domainUsername = String.format("%s%s%s", domain,
                 String.valueOf(Character.LINE_SEPARATOR), username.trim());
@@ -72,7 +80,7 @@ public class DomainUsernamePasswordAuthenticationFilter extends UsernamePassword
     }
 
     protected String obtainDomain(HttpServletRequest request) {
-        return request.getParameter(domainParameter);
+        return request.getParameter(HTTP_REQUEST_PARAMETER_DOMAIN);
     }
 
 }
