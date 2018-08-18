@@ -20,7 +20,7 @@
 
     <properties>
 
-        <problem-spring-web.version>0.22.1</problem-spring-web.version>
+        <problem-spring-web.version>0.23.0</problem-spring-web.version>
         <modelmapper.version>1.1.0</modelmapper.version>
 
         <powermock.version>1.7.3</powermock.version>
