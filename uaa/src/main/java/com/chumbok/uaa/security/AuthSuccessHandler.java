@@ -61,10 +61,11 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         } else {
-            response.addCookie(new Cookie(AUTH_COOKIE_NAME, "Bearer " + accessToken.getToken()));
+            response.getWriter().write(accessToken.getToken());
             response.setContentType(MediaType.TEXT_HTML_VALUE);
         }
 
+        response.addCookie(new Cookie(AUTH_COOKIE_NAME, "Bearer " + accessToken.getToken()));
         response.setStatus(HttpStatus.OK.value());
 
         clearAuthenticationAttributes(request);
