@@ -22,20 +22,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("it")
 public class ExceptionHandlingAdviceIT {
 
-    private static final String NON_EXISTENT_URL = "/not-exist";
+    private static final String NON_EXISTENT_URL = "/public/not-exist";
 
     @Autowired
     private MockMvc mockMvc;
     
     @Test
-    public void shouldReturn404AndZalandoProblemJsonOnNotExistentUrl() throws Exception {
+    public void shouldReturn404OnNotExistentUrl() throws Exception {
 
         mockMvc.perform(get(NON_EXISTENT_URL))
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
-                .andExpect(jsonPath("$.title").value("Not Found"))
-                .andExpect(jsonPath("$.status").value(404))
-                .andExpect(jsonPath("$.detail").value("No handler found for GET /not-exist"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.code").value("RESOURCE_NOT_FOUND"))
+                .andExpect(jsonPath("$.message").value("Could not find the resource."))
                 .andDo(print());
     }
 
