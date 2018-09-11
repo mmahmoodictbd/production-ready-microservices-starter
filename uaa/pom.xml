@@ -86,6 +86,18 @@
         </dependency>
 
 
+        <dependency>
+            <groupId>com.chumbok</groupId>
+            <artifactId>chumbok-security</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.chumbok</groupId>
+            <artifactId>testable-common</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
         <!-- Test dependencies -->
 
         <dependency>
@@ -193,5 +205,11 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
 </project>
