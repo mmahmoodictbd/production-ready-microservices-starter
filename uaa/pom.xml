@@ -85,11 +85,10 @@
             <version>${jjwt.version}</version>
         </dependency>
 
-
         <dependency>
             <groupId>com.chumbok</groupId>
             <artifactId>chumbok-security</artifactId>
-            <version>1.1.0</version>
+            <version>1.1.1</version>
         </dependency>
 
         <dependency>
@@ -170,9 +169,7 @@
     </dependencies>
 
     <build>
-
         <finalName>uaa</finalName>
-
         <plugins>
 
             <plugin>
