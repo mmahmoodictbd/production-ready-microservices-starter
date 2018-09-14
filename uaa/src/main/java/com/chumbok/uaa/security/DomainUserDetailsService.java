@@ -38,13 +38,13 @@ public class DomainUserDetailsService implements UserDetailsService {
         String[] domainAndUsername = StringUtils.split(username, String.valueOf(Character.LINE_SEPARATOR));
 
         if (domainAndUsername == null || domainAndUsername.length != 2) {
-            throw new UsernameNotFoundException("Domain and Username must be provided");
+            throw new UsernameNotFoundException("Domain and Username must be provided.");
         }
 
         User user = userRepository.findByDomainAndEmail(domainAndUsername[0], domainAndUsername[1]);
         if (user == null) {
-            throw new UsernameNotFoundException(String.format("Username not found for domain, username=%s, domain=%s",
-                    domainAndUsername[0], domainAndUsername[1]));
+            throw new UsernameNotFoundException(String.format("Username[%s] not found for domain[%s].",
+                    domainAndUsername[1], domainAndUsername[0]));
         }
 
         List<GrantedAuthority> authorities = user.getRoles().stream()
@@ -52,7 +52,7 @@ public class DomainUserDetailsService implements UserDetailsService {
                 .collect(Collectors.toList());
 
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(), user.getPassword(),
-                user.isEnabled(), true, true, true, authorities);
+                user.getDomain() + String.valueOf(Character.LINE_SEPARATOR) + user.getEmail(),
+                user.getPassword(), user.isEnabled(), true, true, true, authorities);
     }
 }
