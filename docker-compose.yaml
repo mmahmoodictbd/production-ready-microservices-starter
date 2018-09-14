@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+
+  chumbok-mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "uaa"
+      MYSQL_USER: "app"
+      MYSQL_PASSWORD: "app"
+    volumes:
+      - mysqltest:/var/lib/mysql
+    restart: always
+
+  service-registry:
+    build: "./service-registry"
+    restart: always
+    volumes:
+      - ~/.m2:/root/.m2
+    ports:
+      - 33000:33000
+    expose:
+      - "33000"
+
+  gateway:
+    build: "./gateway"
+    restart: always
+    volumes:
+      - ~/.m2:/root/.m2
+    ports:
+      - 33001:33001
+    expose:
+      - "33001"
+
+  uaa:
+    build: "./uaa"
+    restart: always
+    volumes:
+      - ~/.m2:/root/.m2
+      - ~/Desktop/key:/root/keys
+    ports:
+      - 33002:33002
+    expose:
+      - "33002"
+    depends_on:
+      - chumbok-mysql
+    environment:
+      DB_URL: jdbc:mysql://chumbok-mysql:3306/uaa?createDatabaseIfNotExist=true
+      DATABASE_USER: app
+      DATABASE_PASSWORD: app
+
+volumes:
+  mysqltest:
+    driver: "local"

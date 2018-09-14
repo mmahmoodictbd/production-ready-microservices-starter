@@ -45,4 +45,12 @@ logging:
   level:
     com.chumbok: DEBUG
 
+---
 
+spring:
+  profiles: docker
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://service-registry:33000/eureka/
