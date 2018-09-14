@@ -1,102 +1,79 @@
 package com.chumbok.uaa.conf;
 
-import com.chumbok.uaa.security.DomainUsernamePasswordAuthenticationFilter;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.chumbok.security.AbstractSecurityConfig;
+import com.chumbok.security.AuthTokenParser;
+import com.chumbok.security.EncryptionKeyUtil;
+import com.chumbok.uaa.security.AuthenticationHandler;
+import com.chumbok.uaa.security.DefaultAuthenticationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.OrRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
+/**
+ * Application security config.
+ */
+@EnableWebSecurity
+public class SecurityConfig extends AbstractSecurityConfig {
 
-@Configuration
-@Import(SecurityProblemSupport.class)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    private EncryptionKeyUtil encryptionKeyUtil;
+    private String authTokenSigningKeyPath;
 
-    private static final RequestMatcher PUBLIC_URLS =
-            new OrRequestMatcher(new AntPathRequestMatcher("/public/*"));
-
-    private SecurityProblemSupport problemSupport;
-
-    private UserDetailsService userDetailsService;
-    private AuthenticationSuccessHandler authenticationSuccessHandler;
-    private AuthenticationFailureHandler authenticationFailureHandler;
-    private ObjectMapper objectMapper;
-
-    public SecurityConfig(UserDetailsService userDetailsService,
-                          AuthenticationSuccessHandler authenticationSuccessHandler,
-                          AuthenticationFailureHandler authenticationFailureHandler,
-                          SecurityProblemSupport problemSupport,
-                          ObjectMapper objectMapper) {
-        super();
-        this.userDetailsService = userDetailsService;
-        this.authenticationSuccessHandler = authenticationSuccessHandler;
-        this.authenticationFailureHandler = authenticationFailureHandler;
-        this.problemSupport = problemSupport;
-        this.objectMapper = objectMapper;
+    /**
+     * Construct security config with userDetailService, encryptionKeyUtil and authTokenSigningKeyPath.
+     *
+     * @param userDetailsService
+     * @param encryptionKeyUtil
+     * @param authTokenSigningKeyPath
+     */
+    public SecurityConfig(UserDetailsService userDetailsService, EncryptionKeyUtil encryptionKeyUtil,
+                          @Value("${com.chumbok.auth.token-signing-public-key-path}") String authTokenSigningKeyPath) {
+        super.setUserDetailsService(userDetailsService);
+        this.encryptionKeyUtil = encryptionKeyUtil;
+        this.authTokenSigningKeyPath = authTokenSigningKeyPath;
     }
 
+    /**
+     * Creates authenticationManager bean.
+     *
+     * @return
+     * @throws Exception
+     */
+    @Bean(name = "authenticationManager")
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    /**
+     * Creates default AuthenticationHandler bean.
+     *
+     * @return
+     */
+    @Bean
+    protected AuthenticationHandler authenticationHandler() {
+        return new DefaultAuthenticationHandler();
+    }
+
+    /**
+     * Create AuthTokenParser bean.
+     *
+     * @return
+     */
+    @Bean
+    public AuthTokenParser authTokenParser() {
+        EncryptionKeyUtil encryptionKeyUtil = new EncryptionKeyUtil();
+        return new AuthTokenParser(encryptionKeyUtil.loadPublicKey(authTokenSigningKeyPath));
+    }
+
+    /**
+     * Set AuthTokenParser to super class so that auth token can be consumed.
+     * @param authTokenParser
+     */
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(authProvider());
-    }
-
     @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().requestMatchers(PUBLIC_URLS);
-    }
-
-    @Override
-    public void configure(final HttpSecurity http) throws Exception {
-        http
-                .csrf().disable() // We don't need CSRF for JWT based authentication
-                .exceptionHandling()
-                .authenticationEntryPoint(problemSupport)
-                .accessDeniedHandler(problemSupport)
-
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-
-                .authorizeRequests()
-                .antMatchers("/login").permitAll()
-
-                .and()
-                .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-    }
-
-    private DomainUsernamePasswordAuthenticationFilter authenticationFilter() throws Exception {
-        DomainUsernamePasswordAuthenticationFilter filter = new DomainUsernamePasswordAuthenticationFilter(objectMapper);
-        filter.setAuthenticationManager(authenticationManagerBean());
-        filter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
-        filter.setAuthenticationFailureHandler(authenticationFailureHandler);
-        return filter;
-    }
-
-
-    private AuthenticationProvider authProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
-    }
-
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    protected void setAuthTokenParser(AuthTokenParser authTokenParser) {
+        super.setAuthTokenParser(authTokenParser);
     }
 }
