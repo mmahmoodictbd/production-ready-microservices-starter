@@ -10,12 +10,9 @@ import static io.restassured.RestAssured.given;
 public class PingControllerIT extends IntegrationTestBase {
 
     @Test
-    public void shouldReturnHttpStatus204WhenPing() throws Exception {
-
+    public void shouldReturnHttpStatus204WhenPing() {
         Response response = given().get("/ping").andReturn();
-
         response.then().assertThat().statusCode(HttpStatus.NO_CONTENT.value());
-
     }
 
 
