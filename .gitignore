@@ -25,3 +25,5 @@ hs_err_pid*
 
 *.iml
 */target/*
+/uaa/uaa.ipr
+/uaa/uaa.iws

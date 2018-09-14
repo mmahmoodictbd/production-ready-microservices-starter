@@ -74,6 +74,14 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring.boot.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>build-info</goal>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
 
                 <plugin>
@@ -212,10 +220,7 @@
                     <version>${docker-maven-plugin.version}</version>
                     <configuration>
                         <imageName>mmahmood/${project.artifactId}</imageName>
-                        <baseImage>java:8</baseImage>
-                        <entryPoint>["java", "-jar", "/${project.build.finalName}.jar", "-Xdebug
-                            -Xrunjdwp:server=y,transport=dt_socket,suspend=n"]
-                        </entryPoint>
+                        <dockerDirectory>${project.basedir}</dockerDirectory>
                         <resources>
                             <resource>
                                 <targetPath>/</targetPath>
