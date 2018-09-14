@@ -31,8 +31,8 @@ public class ExceptionHandlerAdvice {
     private final Map<Class, ExceptionMapping> exceptionMappings = new HashMap<>();
 
     public ExceptionHandlerAdvice() {
-        registerMapping(InternalErrorException.class, "SERVER_ERROR", "Internal server error.", BAD_REQUEST);
-        registerMapping(BadRequestException.class, "INVALID_REQUEST", "Invalid request received.", INTERNAL_SERVER_ERROR);
+        registerMapping(InternalErrorException.class, "SERVER_ERROR", "Internal server error.", INTERNAL_SERVER_ERROR);
+        registerMapping(BadRequestException.class, "BAD_REQUEST", "Invalid request received.", BAD_REQUEST);
         registerMapping(AuthenticationException.class, "UNAUTHORIZED_REQUEST", "Could not authenticate.", UNAUTHORIZED);
         registerMapping(NoHandlerFoundException.class, "RESOURCE_NOT_FOUND", "Could not find the resource.", NOT_FOUND);
 
