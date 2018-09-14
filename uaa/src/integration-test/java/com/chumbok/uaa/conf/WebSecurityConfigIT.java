@@ -45,17 +45,15 @@ public class WebSecurityConfigIT {
     private MockMvc mockMvc;
 
     @Test
-    public void shouldReturn401OnMissingLoginRequestAttributes() throws Exception {
+    public void shouldReturn400OnMissingLoginRequestAttributes() throws Exception {
 
         mockMvc.perform(post(LOGIN_POST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(LOGIN_BAD_REQUEST_BODY))
-                .andExpect(status().isUnauthorized())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.title").value("Authentication Problem"))
-                .andExpect(jsonPath("$.status").value(401))
-                .andExpect(jsonPath("$.detail").value("Missing login request parameter(s). " +
-                        "Must contain domain, username and password parameters."))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.message").value("Invalid request received."))
                 .andExpect(cookie().doesNotExist("Authorization"))
                 .andDo(print());
     }
@@ -68,57 +66,24 @@ public class WebSecurityConfigIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(LOGIN_WRONG_CRED_REQUEST_BODY))
                 .andExpect(status().isUnauthorized())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.title").value("Authentication Problem"))
-                .andExpect(jsonPath("$.status").value(401))
-                .andExpect(jsonPath("$.detail").value("Bad credentials"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.code").value("UNAUTHORIZED_REQUEST"))
+                .andExpect(jsonPath("$.message").value("Could not authenticate."))
                 .andExpect(cookie().doesNotExist("Authorization"))
                 .andDo(print());
     }
 
     @Test
-    public void shouldReturnAccessTokenAndRefreshTokenWhenRequestContentTypeJson() throws Exception {
+    public void shouldReturnAccessTokenAndAuthorizationCookieWhenSuccessfullyAuthenticate() throws Exception {
 
         mockMvc.perform(post(LOGIN_POST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(LOGIN_REQUEST_BODY))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.accessToken").value(notNullValue()))
-                .andExpect(jsonPath("$.refreshToken").value(notNullValue()))
                 .andExpect(cookie().exists("Authorization"))
-                .andExpect(cookie().value("Authorization", startsWith("Bearer ")));
+                .andExpect(cookie().value("Authorization", notNullValue()));
     }
 
-    @Test
-    public void shouldReturnAccessTokenAndRefreshTokenWhenRequestContentTypeJsonUtf8() throws Exception {
-
-        mockMvc.perform(post(LOGIN_POST_URL)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(LOGIN_REQUEST_BODY))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.accessToken").value(notNullValue()))
-                .andExpect(jsonPath("$.refreshToken").value(notNullValue()))
-                .andExpect(cookie().exists("Authorization"))
-                .andExpect(cookie().value("Authorization", startsWith("Bearer ")));
-    }
-
-
-    @Test
-    public void shouldReturnAccessTokenWhenRequestContentTypeIsNotSet() throws Exception {
-
-        mockMvc.perform(post(LOGIN_POST_URL)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
-                        new BasicNameValuePair("domain", "chumbok"),
-                        new BasicNameValuePair("username", "admin@chumbok.com"),
-                        new BasicNameValuePair("password", "admin")
-                )))))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.TEXT_HTML_VALUE))
-                .andExpect(content().string(notNullValue()))
-                .andExpect(cookie().exists("Authorization"))
-                .andExpect(cookie().value("Authorization", startsWith("Bearer ")));
-    }
 }
