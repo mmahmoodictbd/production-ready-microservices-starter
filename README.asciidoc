@@ -45,9 +45,22 @@ mvn spring-boot:run
 cd uaa
 mvn spring-boot:run
 # Go to http://localhost:33000/
-# Gateway service should be registered in eureka.
+# UAA should be registered in eureka.
 ```
 
+### Run in Docker
+
+```
+# Install docker and docker-compose first.
+mvn clean package
+docker-compose build
+docker-compose up
+# Go to http://localhost:33000/
+# Gateway service and UAA should be registered in eureka.
+# In browser, try http://localhost:33001/uaa/ping
+# You supposed to get HTTP status 204.
+# If it works, that means requests are proxying through gateway.
+```
 
 ### Copyright & License
 
