@@ -23,7 +23,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean isExist(String org, String tenant, String username);
 
     /**
-     * Retrieve User based on domain and email.
+     * Retrieve User based on org, tenant and username.
      *
      * @param org
      * @param tenant
