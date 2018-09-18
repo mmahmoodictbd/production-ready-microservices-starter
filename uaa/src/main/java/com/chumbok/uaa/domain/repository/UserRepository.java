@@ -19,7 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param username
      * @return boolean true/false
      */
-    @Query("select count(user) > 0  from User user where user.org = ?1 and user.tenant = ?2 and user.username = ?3")
+    @Query("select count(user) > 0  from User user where user.org.org = ?1 and user.tenant.tenant = ?2 and user.username = ?3")
     boolean isExist(String org, String tenant, String username);
 
     /**
@@ -30,6 +30,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param username
      * @return User entity
      */
-    @Query("select user  from User user where user.org = ?1 and user.tenant = ?2 and user.username = ?3")
+    @Query("select user  from User user where user.org.org = ?1 and user.tenant.tenant = ?2 and user.username = ?3")
     User find(String org, String tenant, String username);
 }
