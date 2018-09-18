@@ -1,4 +1,4 @@
-package com.chumbok.uaa.security.controller;
+package com.chumbok.uaa.controller;
 
 import com.chumbok.testable.common.CookieUtil;
 import com.chumbok.uaa.security.AuthenticationHandler;
