@@ -1,12 +1,12 @@
-package com.chumbok.uaa.security.controller;
+package com.chumbok.uaa.controller;
 
 
 import com.chumbok.testable.common.CookieUtil;
 import com.chumbok.testable.common.UrlUtil;
-import com.chumbok.uaa.security.LoginRequest;
 import com.chumbok.uaa.exception.presentation.BadRequestException;
 import com.chumbok.uaa.security.AuthTokenBuilder;
 import com.chumbok.uaa.security.AuthenticationHandler;
+import com.chumbok.uaa.security.LoginRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -77,18 +77,20 @@ public class LoginController {
     public Map<String, String> login(@RequestBody LoginRequest loginRequest,
                                      HttpServletRequest request, HttpServletResponse response) {
 
-        String domain = loginRequest.getDomain() != null ? loginRequest.getDomain() : "";
+        String org = loginRequest.getOrg() != null ? loginRequest.getOrg() : "";
+        String tenant = loginRequest.getTenant() != null ? loginRequest.getTenant() : "";
         String username = loginRequest.getUsername() != null ? loginRequest.getUsername() : "";
         String password = loginRequest.getPassword() != null ? loginRequest.getPassword() : "";
 
-        if (StringUtils.isEmpty(domain) || StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
-            throw new BadRequestException("Login request should contain domain, username and password.");
+        if (StringUtils.isEmpty(org) || StringUtils.isEmpty(tenant)
+                || StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
+            throw new BadRequestException("Login request should contain org, tenant, username and password.");
         }
 
         UsernamePasswordAuthenticationToken authRequest =
-                buildUsernamePasswordAuthenticationToken(domain, username, password);
+                buildUsernamePasswordAuthenticationToken(org, tenant, username, password);
 
-        log.debug("Authenticating user[{}] for domain[{}]...", username, domain);
+        log.debug("Authenticating user[{}] for org[{}] and tenant[{}]...", username, org, tenant);
 
         Authentication authentication;
         try {
@@ -99,12 +101,12 @@ public class LoginController {
                 throw new AuthenticationServiceException("Could not authenticate.");
             }
         } catch (AuthenticationException ex) {
-            log.debug("Could not authenticate user[{}] for domain[{}].", username, domain);
+            log.debug("Could not authenticate user[{}] for org[{}] and tenant[{}].", username, org, tenant);
             authenticationHandler.onAuthenticationFailure(request, response, ex);
             throw ex;
         }
 
-        log.debug("user[{}] for domain[{}] is authenticated", username, domain);
+        log.debug("user[{}] org[{}] and tenant[{}] is authenticated", username, org, tenant);
 
         String authToken = authTokenBuilder.createAccessToken(authentication);
 
@@ -121,11 +123,14 @@ public class LoginController {
 
 
     private UsernamePasswordAuthenticationToken buildUsernamePasswordAuthenticationToken(
-            String domain, String username, String password) {
+            String org, String tenant, String username, String password) {
 
-        String domainUsername = String.format("%s%s%s", domain.trim(),
-                String.valueOf(Character.LINE_SEPARATOR), username.trim());
-        return new UsernamePasswordAuthenticationToken(domainUsername, password);
+        String authTokenUsername = org.trim()
+                + String.valueOf(Character.LINE_SEPARATOR)
+                + tenant.trim()
+                + String.valueOf(Character.LINE_SEPARATOR)
+                + username.trim();
+        return new UsernamePasswordAuthenticationToken(authTokenUsername, password);
     }
 
     /**
