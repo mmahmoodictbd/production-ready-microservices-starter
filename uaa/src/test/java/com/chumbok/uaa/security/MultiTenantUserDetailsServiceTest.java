@@ -33,14 +33,14 @@ public class MultiTenantUserDetailsServiceTest {
     }
 
     @Test
-    public void shouldThrowUsernameNotFoundExceptionWhenProvidedUsernameDoesNotContainBothDomainAndUsername() {
+    public void shouldThrowUsernameNotFoundExceptionWhenProvidedUsernameDoesNotContainOrgOrTenantOrUsername() {
 
         // Given
         thrown.expect(UsernameNotFoundException.class);
         thrown.expectMessage("Org, Tenant and Username must be provided.");
 
         // When
-        userDetailsService.loadUserByUsername("MyWithoutDomainUsername");
+        userDetailsService.loadUserByUsername("MyWithoutOrgTenantUsername");
 
         // Then
         // // Expect test to be passed.
