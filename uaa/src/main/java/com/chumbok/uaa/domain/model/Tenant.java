@@ -10,18 +10,17 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
- * User Role entity
+ * Tenant entity
  */
 @Getter
 @Setter
 @EqualsAndHashCode
 @Entity
-@Table(name = "role", uniqueConstraints = {@UniqueConstraint(columnNames = {"org_id", "tenant_id", "role"})})
-public class Role extends BaseEntity {
+@Table(name = "tenant", uniqueConstraints = {@UniqueConstraint(columnNames = {"org_id", "tenant"})})
+public class Tenant extends BaseEntity {
 
     /**
      * Org is the parent of it's tenants.
@@ -31,18 +30,11 @@ public class Role extends BaseEntity {
     private Org org;
 
     /**
-     * Tenant is the parent of it's users.
-     * Part of unique identifier of an user.
-     */
-    @ManyToOne(optional = false)
-    private Tenant tenant;
-
-    /**
-     * String representation of role.
+     * String representation of tenant.
      */
     @NotNull
     @Column(nullable = false)
     @Length(min = 1, max = 255)
-    private String role;
+    private String tenant;
 
 }

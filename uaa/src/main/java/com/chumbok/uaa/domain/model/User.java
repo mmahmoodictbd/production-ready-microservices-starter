@@ -9,7 +9,9 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -26,23 +28,31 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "user", uniqueConstraints = {@UniqueConstraint(columnNames = {"domain", "email"})})
+@Table(name = "user", uniqueConstraints = {@UniqueConstraint(columnNames = {"org_id", "tenant_id", "username"})})
 public class User extends BaseEntity {
 
     /**
-     * Domain aka tenant/org
+     * Org is the parent of it's tenants.
      * Part of unique identifier of an user.
      */
-    @NotBlank
-    @Column(nullable = false)
-    private String domain;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "org_id")
+    private Org org;
+
+    /**
+     * Tenant is the parent of it's users.
+     * Part of unique identifier of an user.
+     */
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "tenant_id")
+    private Tenant tenant;
 
     /**
      * Unique identifier of an user.
      */
     @NotBlank
     @Column(nullable = false)
-    private String email;
+    private String username;
 
     /**
      * Hashed password.
@@ -97,6 +107,10 @@ public class User extends BaseEntity {
      * Roles
      */
     @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles", joinColumns = {
+            @JoinColumn(name = "org_id", referencedColumnName = "org_id"),
+            @JoinColumn(name = "tenant_id", referencedColumnName = "tenant_id"),
+            @JoinColumn(name = "user_id", referencedColumnName = "id")})
     private Set<Role> roles = new HashSet<>();
 
     /**
