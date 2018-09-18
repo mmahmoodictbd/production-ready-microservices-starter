@@ -9,11 +9,18 @@ databaseChangeLog:
           tableName: user
           columns:
               - column:
-                  name: domain
-                  value: chumbok
+                  name: org_id
+                  # Braces around the SQL is necessary, liquibase could not generate proper MySQL SQL.
+                  # MySQL expects braces around SELECT query in INSERT VALUES.
+                  valueComputed: "(SELECT id FROM org WHERE org = 'Chumbok')"
               - column:
-                  name: email
-                  value: admin@chumbok.com
+                  name: tenant_id
+                  # Braces around the SQL is necessary, liquibase could not generate proper MySQL SQL.
+                  # MySQL expects braces around SELECT query in INSERT VALUES.
+                  valueComputed: "(SELECT id FROM tenant WHERE tenant = 'Chumbok')"
+              - column:
+                  name: username
+                  value: admin
               - column:
                   name: password
                   # Password in plain text: admin

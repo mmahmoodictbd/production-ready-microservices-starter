@@ -1,0 +1,68 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: create-tenant-table
+      author: mahmood
+      changes:
+      - createTable:
+          tableName: tenant
+          columns:
+          - column:
+              name: id
+              type: BIGINT
+              autoIncrement: true
+              constraints:
+                primaryKey: true
+                primaryKeyName: pk_tenant
+                nullable: false
+          - column:
+              name: org_id
+              type: BIGINT
+              constraints:
+                nullable: false
+          - column:
+              name: tenant
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: created_by
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: created_at
+              type: datetime(6)
+              constraints:
+                nullable: false
+          - column:
+              name: updated_by
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: updated_at
+              type: datetime(6)
+              constraints:
+                nullable: false
+
+      - createIndex:
+          indexName: idx_tenant_org_id
+          tableName: tenant
+          columns:
+          - column:
+              name: org_id
+              type: BIGINT
+
+      - createIndex:
+          indexName: idx_tenant_org_id_tenant
+          tableName: tenant
+          unique: true
+          columns:
+          - column:
+              name: org_id
+              type: BIGINT
+          - column:
+              name: tenant
+              type: varchar(255)
+

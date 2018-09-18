@@ -1,0 +1,86 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: create-table-role
+      author: mahmood
+      changes:
+      - createTable:
+          tableName: role
+          columns:
+          - column:
+              name: id
+              type: BIGINT
+              autoIncrement: true
+              constraints:
+                primaryKey: true
+                primaryKeyName: pk_role
+                nullable: false
+          - column:
+              name: org_id
+              type: BIGINT
+              constraints:
+                nullable: false
+          - column:
+              name: tenant_id
+              type: BIGINT
+              constraints:
+                nullable: false
+          - column:
+              name: role
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: created_by
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: created_at
+              type: datetime(6)
+              constraints:
+                nullable: false
+          - column:
+              name: updated_by
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: updated_at
+              type: datetime(6)
+              constraints:
+                nullable: false
+
+      - createIndex:
+          indexName: idx_role_org_id
+          tableName: role
+          columns:
+          - column:
+              name: org_id
+              type: BIGINT
+
+      - createIndex:
+          indexName: idx_role_org_id_tenant_id
+          tableName: role
+          columns:
+          - column:
+              name: org_id
+              type: BIGINT
+          - column:
+              name: tenant_id
+              type: BIGINT
+
+      - createIndex:
+          indexName: idx_role_org_id_tenant_id_role
+          tableName: role
+          unique: true
+          columns:
+          - column:
+              name: org_id
+              type: BIGINT
+          - column:
+              name: tenant_id
+              type: BIGINT
+          - column:
+              name: role
+              type: varchar(255)

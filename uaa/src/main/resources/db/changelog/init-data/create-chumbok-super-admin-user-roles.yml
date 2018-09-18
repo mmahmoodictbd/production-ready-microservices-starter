@@ -9,10 +9,20 @@ databaseChangeLog:
           tableName: user_roles
           columns:
               - column:
+                  name: org_id
+                  # Braces around the SQL is necessary, liquibase could not generate proper MySQL SQL.
+                  # MySQL expects braces around SELECT query in INSERT VALUES.
+                  valueComputed: "(SELECT id FROM org WHERE org = 'Chumbok')"
+              - column:
+                  name: tenant_id
+                  # Braces around the SQL is necessary, liquibase could not generate proper MySQL SQL.
+                  # MySQL expects braces around SELECT query in INSERT VALUES.
+                  valueComputed: "(SELECT id FROM tenant WHERE tenant = 'Chumbok')"
+              - column:
                   name: user_id
                   # Braces around the SQL is necessary, liquibase could not generate proper MySQL SQL.
                   # MySQL expects braces around SELECT query in INSERT VALUES.
-                  valueComputed: "(SELECT id FROM user WHERE email = 'admin@chumbok.com')"
+                  valueComputed: "(SELECT id FROM user WHERE username = 'admin')"
               - column:
                   name: roles_id
                   # Braces around the SQL is necessary, liquibase could not generate proper MySQL SQL.

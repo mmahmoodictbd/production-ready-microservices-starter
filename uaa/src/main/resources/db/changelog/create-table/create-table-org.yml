@@ -1,11 +1,11 @@
 databaseChangeLog:
 
   - changeSet:
-      id: create-table-role
+      id: create-org-table
       author: mahmood
       changes:
       - createTable:
-          tableName: role
+          tableName: org
           columns:
           - column:
               name: id
@@ -13,10 +13,10 @@ databaseChangeLog:
               autoIncrement: true
               constraints:
                 primaryKey: true
-                primaryKeyName: pk_role
+                primaryKeyName: pk_org
                 nullable: false
           - column:
-              name: role
+              name: org
               type: varchar(255)
               constraints:
                 nullable: false
@@ -40,3 +40,8 @@ databaseChangeLog:
               type: datetime(6)
               constraints:
                 nullable: false
+
+      - addUniqueConstraint:
+          tableName: org
+          columnNames: org
+          constraintName: UK_org_org

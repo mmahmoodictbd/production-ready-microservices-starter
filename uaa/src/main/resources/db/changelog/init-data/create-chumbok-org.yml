@@ -1,0 +1,25 @@
+
+databaseChangeLog:
+
+  - changeSet:
+      id: create-chumbok-org
+      author: mahmood
+      changes:
+      - insert:
+          tableName: org
+          columns:
+              - column:
+                  name: org
+                  value: Chumbok
+              - column:
+                  name: created_by
+                  value: InitDataLiquibase
+              - column:
+                  name: created_at
+                  valueDate: now()
+              - column:
+                  name: updated_by
+                  value: InitDataLiquibase
+              - column:
+                  name: updated_at
+                  valueDate: now()
