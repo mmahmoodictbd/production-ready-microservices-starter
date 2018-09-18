@@ -26,4 +26,11 @@ public class Org extends BaseEntity {
     @Length(min = 1, max = 255)
     private String org;
 
+    public Org() {
+    }
+
+    public Org(String org) {
+        this.org = org;
+    }
+
 }

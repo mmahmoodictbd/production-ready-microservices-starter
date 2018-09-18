@@ -37,4 +37,10 @@ public class Tenant extends BaseEntity {
     @Length(min = 1, max = 255)
     private String tenant;
 
+    public Tenant() {
+    }
+
+    public Tenant(String tenant) {
+        this.tenant = tenant;
+    }
 }
