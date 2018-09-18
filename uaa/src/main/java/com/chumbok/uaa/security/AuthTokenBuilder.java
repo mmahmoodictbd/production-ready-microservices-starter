@@ -59,20 +59,26 @@ public class AuthTokenBuilder {
             throw new IllegalStateException("Authentication principle can not be null or empty.");
         }
 
-        String[] domainAndUsername = StringUtils.split(principal, String.valueOf(Character.LINE_SEPARATOR));
+        String[] orgTenantUsername = principal.split(String.valueOf(Character.LINE_SEPARATOR));
 
-        if (domainAndUsername == null || domainAndUsername.length != 2) {
+        if (orgTenantUsername == null || orgTenantUsername.length != 3) {
             throw new IllegalStateException("Authentication principle[" + principal
-                    + "] should contain domain and username.");
+                    + "] should contain org, tenant and username.");
         }
 
-        String domain = domainAndUsername[0];
-        String username = domainAndUsername[1];
+        String org = orgTenantUsername[0];
+        String tenant = orgTenantUsername[1];
+        String username = orgTenantUsername[2];
         List<GrantedAuthority> authorities = new ArrayList<>(authentication.getAuthorities());
 
-        if (StringUtils.isBlank(domain)) {
+        if (StringUtils.isBlank(org)) {
             throw new IllegalArgumentException("Authentication principle[" + principal
-                    + "] does not contain domain.");
+                    + "] does not contain org.");
+        }
+
+        if (StringUtils.isBlank(tenant)) {
+            throw new IllegalArgumentException("Authentication principle[" + principal
+                    + "] does not contain tenant.");
         }
 
         if (StringUtils.isBlank(username)) {
@@ -87,7 +93,8 @@ public class AuthTokenBuilder {
 
         Claims claims = Jwts.claims();
         claims.setSubject(username);
-        claims.put("domain", domain);
+        claims.put("org", org);
+        claims.put("tenant", tenant);
         claims.put("scopes", authorities.stream().map(s -> s.toString()).collect(Collectors.toList()));
 
         LocalDateTime currentTime = dateUtil.getCurrentLocalDateTime();
