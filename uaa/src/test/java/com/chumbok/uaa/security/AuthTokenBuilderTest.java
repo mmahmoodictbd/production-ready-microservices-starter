@@ -67,7 +67,7 @@ public class AuthTokenBuilderTest {
     }
 
     @Test
-    public void shouldThrowIllegalStateExceptionIfDomainAndUsernameCanNotBeSeparatedFromPrinciple() {
+    public void shouldThrowIllegalStateExceptionIfOrgTenantAndUsernameCanNotBeSeparatedFromPrinciple() {
 
         // Given
 
@@ -75,7 +75,7 @@ public class AuthTokenBuilderTest {
         when(authenticationMock.getPrincipal()).thenReturn("HelloUser");
 
         thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("Authentication principle[HelloUser] should contain domain and username.");
+        thrown.expectMessage("Authentication principle[HelloUser] should contain org, tenant and username.");
 
         // When
         authTokenBuilder.createAccessToken(authenticationMock);
@@ -85,16 +85,39 @@ public class AuthTokenBuilderTest {
     }
 
     @Test
-    public void shouldThrowIllegalArgumentExceptionIfDomainIsEmptyOrNull() {
+    public void shouldThrowIllegalArgumentExceptionIfOrgIsEmptyOrNull() {
 
         // Given
 
         Authentication authenticationMock = mock(Authentication.class);
-        when(authenticationMock.getPrincipal()).thenReturn(" " + Character.LINE_SEPARATOR + "HelloUser");
+        when(authenticationMock.getPrincipal()).thenReturn(" " + Character.LINE_SEPARATOR + "HelloTenant"
+                + Character.LINE_SEPARATOR + "HelloUser");
 
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Authentication principle[ " + Character.LINE_SEPARATOR
-                + "HelloUser] does not contain domain.");
+        thrown.expectMessage("Authentication principle[ " + Character.LINE_SEPARATOR + "HelloTenant"
+                + Character.LINE_SEPARATOR
+                + "HelloUser] does not contain org.");
+
+        // When
+        authTokenBuilder.createAccessToken(authenticationMock);
+
+        // Then
+        // Expect test to be passed.
+    }
+
+    @Test
+    public void shouldThrowIllegalArgumentExceptionIfTenantIsEmptyOrNull() {
+
+        // Given
+
+        Authentication authenticationMock = mock(Authentication.class);
+        when(authenticationMock.getPrincipal()).thenReturn("HelloOrg" + Character.LINE_SEPARATOR + ""
+                + Character.LINE_SEPARATOR + "HelloUser");
+
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Authentication principle[HelloOrg" + Character.LINE_SEPARATOR + ""
+                + Character.LINE_SEPARATOR
+                + "HelloUser] does not contain tenant.");
 
         // When
         authTokenBuilder.createAccessToken(authenticationMock);
@@ -109,11 +132,12 @@ public class AuthTokenBuilderTest {
         // Given
 
         Authentication authenticationMock = mock(Authentication.class);
-        when(authenticationMock.getPrincipal()).thenReturn("HelloDomain" + Character.LINE_SEPARATOR + " ");
+        when(authenticationMock.getPrincipal()).thenReturn("HelloOrg" + Character.LINE_SEPARATOR + "HelloTenant"
+                + Character.LINE_SEPARATOR + " ");
 
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Authentication principle[HelloDomain" + Character.LINE_SEPARATOR
-                + " ] does not contain username.");
+        thrown.expectMessage("Authentication principle[HelloOrg" + Character.LINE_SEPARATOR
+                + "HelloTenant" + Character.LINE_SEPARATOR + " ] does not contain username.");
 
         // When
         authTokenBuilder.createAccessToken(authenticationMock);
@@ -128,11 +152,18 @@ public class AuthTokenBuilderTest {
         // Given
 
         Authentication authenticationMock = mock(Authentication.class);
-        when(authenticationMock.getPrincipal()).thenReturn("HelloDomain" + Character.LINE_SEPARATOR + "HelloUser");
+        when(authenticationMock.getPrincipal()).thenReturn("HelloOrg"
+                + Character.LINE_SEPARATOR
+                + "HelloTenant"
+                + Character.LINE_SEPARATOR
+                + "HelloUser");
         when(authenticationMock.getAuthorities()).thenReturn(Collections.emptyList());
 
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Authentication principle[HelloDomain" + Character.LINE_SEPARATOR
+        thrown.expectMessage("Authentication principle[HelloOrg"
+                + Character.LINE_SEPARATOR
+                + "HelloTenant"
+                + Character.LINE_SEPARATOR
                 + "HelloUser] does not contain authorities.");
 
         // When
@@ -155,7 +186,11 @@ public class AuthTokenBuilderTest {
         ArgumentCaptor<PrivateKey> privateKeyCaptor = ArgumentCaptor.forClass(PrivateKey.class);
 
         Authentication authenticationMock = mock(Authentication.class);
-        when(authenticationMock.getPrincipal()).thenReturn("HelloDomain" + Character.LINE_SEPARATOR + "HelloUser");
+        when(authenticationMock.getPrincipal()).thenReturn("HelloOrg"
+                + Character.LINE_SEPARATOR
+                + "HelloTenant"
+                + Character.LINE_SEPARATOR
+                + "HelloUser");
 
         Collection authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_HELLO"));
         when(authenticationMock.getAuthorities()).thenReturn(authorities);
@@ -184,7 +219,8 @@ public class AuthTokenBuilderTest {
         verify(jwtUtilMock).getJwts(claimsCaptor.capture(), issuerCaptor.capture(), issueDateCaptor.capture(),
                 expirationDateCaptor.capture(), privateKeyCaptor.capture());
         assertEquals("HelloUser", claimsCaptor.getValue().getSubject());
-        assertEquals("HelloDomain", claimsCaptor.getValue().get("domain"));
+        assertEquals("HelloOrg", claimsCaptor.getValue().get("org"));
+        assertEquals("HelloTenant", claimsCaptor.getValue().get("tenant"));
         assertEquals("[ROLE_HELLO]", claimsCaptor.getValue().get("scopes").toString());
         assertEquals("ME!", issuerCaptor.getValue());
 
