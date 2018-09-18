@@ -1,8 +1,5 @@
 package com.chumbok.uaa.conf;
 
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +10,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
-
-import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -33,13 +27,13 @@ public class WebSecurityConfigIT {
     private static final String LOGIN_POST_URL = "/login";
 
     private static final String LOGIN_BAD_REQUEST_BODY
-            = "{ \"username\": \"admin@chumbok.com\", \"password\": \"admin\" }";
+            = "{ \"username\": \"admin\", \"password\": \"admin\" }";
 
     private static final String LOGIN_REQUEST_BODY
-            = "{ \"domain\" : \"chumbok\", \"username\": \"admin@chumbok.com\", \"password\": \"admin\" }";
+            = "{ \"org\" : \"Chumbok\", \"tenant\" : \"Chumbok\", \"username\": \"admin\", \"password\": \"admin\" }";
 
     private static final String LOGIN_WRONG_CRED_REQUEST_BODY
-            = "{ \"domain\" : \"wrong domain\", \"username\": \"admin@chumbok.com\", \"password\": \"admin\" }";
+            = "{ \"org\" : \"wrong org\", \"tenant\" : \"Chumbok\", \"username\": \"admin\", \"password\": \"admin\" }";
 
     @Autowired
     private MockMvc mockMvc;
