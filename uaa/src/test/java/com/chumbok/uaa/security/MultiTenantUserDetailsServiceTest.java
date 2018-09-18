@@ -1,6 +1,8 @@
 package com.chumbok.uaa.security;
 
+import com.chumbok.uaa.domain.model.Org;
 import com.chumbok.uaa.domain.model.Role;
+import com.chumbok.uaa.domain.model.Tenant;
 import com.chumbok.uaa.domain.model.User;
 import com.chumbok.uaa.domain.repository.UserRepository;
 import org.junit.Rule;
@@ -17,17 +19,17 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DomainUserDetailsServiceTest {
+public class MultiTenantUserDetailsServiceTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     private final UserRepository userRepositoryMock;
-    private final DomainUserDetailsService domainUserDetailsService;
+    private final MultiTenantUserDetailsService userDetailsService;
 
-    public DomainUserDetailsServiceTest() {
+    public MultiTenantUserDetailsServiceTest() {
         this.userRepositoryMock = mock(UserRepository.class);
-        this.domainUserDetailsService = new DomainUserDetailsService(userRepositoryMock);
+        this.userDetailsService = new MultiTenantUserDetailsService(userRepositoryMock);
     }
 
     @Test
@@ -35,10 +37,10 @@ public class DomainUserDetailsServiceTest {
 
         // Given
         thrown.expect(UsernameNotFoundException.class);
-        thrown.expectMessage("Domain and Username must be provided.");
+        thrown.expectMessage("Org, Tenant and Username must be provided.");
 
         // When
-        domainUserDetailsService.loadUserByUsername("MyWithoutDomainUsername");
+        userDetailsService.loadUserByUsername("MyWithoutDomainUsername");
 
         // Then
         // // Expect test to be passed.
@@ -49,11 +51,15 @@ public class DomainUserDetailsServiceTest {
 
         // Given
         thrown.expect(UsernameNotFoundException.class);
-        thrown.expectMessage("Username[MyEmail] not found for domain[MyDomain].");
+        thrown.expectMessage("Username[MyUsername] not found for Org[MyOrg] Tenant[MyTenant].");
 
         // When
-        String providedUsername = "MyDomain" + String.valueOf(Character.LINE_SEPARATOR) + "MyEmail";
-        domainUserDetailsService.loadUserByUsername(providedUsername);
+        String providedUsername = "MyOrg"
+                + String.valueOf(Character.LINE_SEPARATOR)
+                + "MyTenant"
+                + String.valueOf(Character.LINE_SEPARATOR)
+                + "MyUsername";
+        userDetailsService.loadUserByUsername(providedUsername);
 
         // Then
         // // Expect test to be passed.
@@ -67,21 +73,29 @@ public class DomainUserDetailsServiceTest {
         Role role = new Role();
         role.setRole("HELLO");
         User userFromDB = new User();
-        userFromDB.setDomain("MyDomain");
-        userFromDB.setEmail("MyEmail");
+        userFromDB.setOrg(new Org("MyOrg"));
+        userFromDB.setTenant(new Tenant("MyTenant"));
+        userFromDB.setUsername("MyUsername");
         userFromDB.setPassword("MyPass");
         userFromDB.setDisplayName("MyName");
         userFromDB.setRoles(Collections.singleton(role));
         userFromDB.setEnabled(true);
 
-        when(userRepositoryMock.findByDomainAndEmail(anyString(), anyString())).thenReturn(userFromDB);
+        when(userRepositoryMock.find(anyString(), anyString(), anyString())).thenReturn(userFromDB);
 
         // When
-        String providedUsername = "MyDomain" + String.valueOf(Character.LINE_SEPARATOR) + "MyEmail";
-        UserDetails userDetails = domainUserDetailsService.loadUserByUsername(providedUsername);
+        String providedUsername = "MyOrg"
+                + String.valueOf(Character.LINE_SEPARATOR)
+                + "MyTenant"
+                + String.valueOf(Character.LINE_SEPARATOR)
+                + "MyUsername";
+        UserDetails userDetails = userDetailsService.loadUserByUsername(providedUsername);
 
         // Then
-        assertEquals("MyDomain" + String.valueOf(Character.LINE_SEPARATOR) + "MyEmail", userDetails.getUsername());
+        assertEquals("MyOrg"
+                        + String.valueOf(Character.LINE_SEPARATOR) + "MyTenant"
+                        + String.valueOf(Character.LINE_SEPARATOR) + "MyUsername",
+                userDetails.getUsername());
         assertEquals("MyPass", userDetails.getPassword());
         assertEquals("[ROLE_HELLO]", userDetails.getAuthorities().toString());
         assertTrue(userDetails.isEnabled());
