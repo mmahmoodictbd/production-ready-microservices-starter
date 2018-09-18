@@ -117,13 +117,20 @@ spring:
       enabled: true
       path: /h2
   datasource:
-    url: ${DB_URL:jdbc:h2:mem:uaa;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL}
+    url: ${DB_URL:jdbc:h2:mem:uaa;DB_CLOSE_ON_EXIT=TRUE;MODE=MYSQL}
     username: sa
     password:
     driver-class: org.h2.Driver
     jpa:
       show-sql: true
 
+com:
+  chumbok:
+    uaa:
+      jwt:
+        token-signing-private-key-path: "classpath:dev-keys/private_key.der"
+    auth:
+      token-signing-public-key-path: "classpath:dev-keys/public_key.der"
 
 ---
 
