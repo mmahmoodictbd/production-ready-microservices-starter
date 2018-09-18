@@ -1,7 +1,7 @@
 package com.chumbok.uaa.domain.repository;
 
 import com.chumbok.uaa.Application;
-import com.chumbok.uaa.domain.model.User;
+import com.chumbok.uaa.domain.model.Org;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,30 +17,23 @@ import static org.junit.Assert.assertNotNull;
 public class DataJpaAuditIT {
 
     @Autowired
-    private UserRepository userRepository;
+    private OrgRepository orgRepository;
 
     @Test
     public void testIfAuditFieldsPopulated() {
 
         // Given
 
-        User user = new User();
-        user.setDomain("Domain");
-        user.setEmail("Email");
-        user.setPassword("UserPassHash");
-        user.setFirstName("FirstName");
-        user.setLastName("LastName");
-        user.setDisplayName("DisplayName");
-        user.setTimezoneId("UTC");
+        Org org = new Org("Org");
 
         // When
-        User persistedUser = userRepository.save(user);
+        Org persistedOrg = orgRepository.save(org);
 
         // Then
-        assertNotNull(persistedUser.getCreatedBy());
-        assertNotNull(persistedUser.getCreatedAt());
-        assertNotNull(persistedUser.getUpdatedBy());
-        assertNotNull(persistedUser.getUpdatedAt());
+        assertNotNull(persistedOrg.getCreatedBy());
+        assertNotNull(persistedOrg.getCreatedAt());
+        assertNotNull(persistedOrg.getUpdatedBy());
+        assertNotNull(persistedOrg.getUpdatedAt());
     }
 
 }
