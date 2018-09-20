@@ -1,6 +1,6 @@
 package com.chumbok.uaa.security;
 
-import com.chumbok.security.EncryptionKeyUtil;
+import com.chumbok.security.util.EncryptionKeyUtil;
 import com.chumbok.testable.common.DateUtil;
 import com.chumbok.uaa.util.JwtUtil;
 import io.jsonwebtoken.Claims;

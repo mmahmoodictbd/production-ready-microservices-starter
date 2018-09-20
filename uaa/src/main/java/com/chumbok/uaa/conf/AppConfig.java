@@ -1,6 +1,7 @@
 package com.chumbok.uaa.conf;
 
-import com.chumbok.security.EncryptionKeyUtil;
+
+import com.chumbok.security.util.EncryptionKeyUtil;
 import com.chumbok.testable.common.CookieUtil;
 import com.chumbok.testable.common.DateUtil;
 import com.chumbok.testable.common.UrlUtil;

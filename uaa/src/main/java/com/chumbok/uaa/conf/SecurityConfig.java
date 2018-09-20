@@ -1,9 +1,12 @@
 package com.chumbok.uaa.conf;
 
-import com.chumbok.security.AbstractSecurityConfig;
-import com.chumbok.security.AuthTokenParser;
-import com.chumbok.security.EncryptionKeyUtil;
+
+import com.chumbok.security.config.AbstractSecurityConfig;
+import com.chumbok.security.properties.SecurityProperties;
+import com.chumbok.security.util.AuthTokenParser;
+import com.chumbok.security.util.EncryptionKeyUtil;
 import com.chumbok.uaa.security.AuthenticationHandler;
+import com.chumbok.uaa.security.ChumbokSecurityProperties;
 import com.chumbok.uaa.security.DefaultAuthenticationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @EnableWebSecurity
 public class SecurityConfig extends AbstractSecurityConfig {
 
+    private ChumbokSecurityProperties chumbokSecurityProperties;
     private EncryptionKeyUtil encryptionKeyUtil;
     private String authTokenSigningKeyPath;
 
@@ -28,10 +32,13 @@ public class SecurityConfig extends AbstractSecurityConfig {
      * @param encryptionKeyUtil
      * @param authTokenSigningKeyPath
      */
-    public SecurityConfig(UserDetailsService userDetailsService, EncryptionKeyUtil encryptionKeyUtil,
+    public SecurityConfig(UserDetailsService userDetailsService,
+                          EncryptionKeyUtil encryptionKeyUtil,
+                          ChumbokSecurityProperties chumbokSecurityProperties,
                           @Value("${com.chumbok.auth.token-signing-public-key-path}") String authTokenSigningKeyPath) {
         super.setUserDetailsService(userDetailsService);
         this.encryptionKeyUtil = encryptionKeyUtil;
+        this.chumbokSecurityProperties = chumbokSecurityProperties;
         this.authTokenSigningKeyPath = authTokenSigningKeyPath;
     }
 
@@ -63,7 +70,6 @@ public class SecurityConfig extends AbstractSecurityConfig {
      */
     @Bean
     public AuthTokenParser authTokenParser() {
-        EncryptionKeyUtil encryptionKeyUtil = new EncryptionKeyUtil();
         return new AuthTokenParser(encryptionKeyUtil.loadPublicKey(authTokenSigningKeyPath));
     }
 
@@ -76,4 +82,31 @@ public class SecurityConfig extends AbstractSecurityConfig {
     protected void setAuthTokenParser(AuthTokenParser authTokenParser) {
         super.setAuthTokenParser(authTokenParser);
     }
+
+    /**
+     * Create SecurityProperties bean.
+     *
+     * @return
+     */
+    @Bean
+    public SecurityProperties securityProperties() {
+        return SecurityProperties.builder()
+                .enable(chumbokSecurityProperties.isEnable())
+                .assertOrgWith(chumbokSecurityProperties.getAssertOrgWith())
+                .assertTenant(chumbokSecurityProperties.isAssertTenant())
+                .assertTenantWith(chumbokSecurityProperties.getAssertTenantWith())
+                .build();
+    }
+
+    /**
+     * Set SecurityProperties to super class so that auth token can be consumed.
+     * @param securityProperties
+     */
+    @Autowired
+    @Override
+    protected void setSecurityProperties(SecurityProperties securityProperties) {
+        super.setSecurityProperties(securityProperties);
+    }
+
+
 }
