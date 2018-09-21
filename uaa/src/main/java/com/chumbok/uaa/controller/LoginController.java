@@ -114,6 +114,7 @@ public class LoginController {
         authCookie.setPath("/");
         authCookie.setHttpOnly(true);
         response.addCookie(authCookie);
+        log.debug("Auth cookie is set for user[{}] org[{}] and tenant[{}]", username, org, tenant);
 
         clearAuthenticationAttributes(request);
         authenticationHandler.onAuthenticationSuccess(request, response, authentication);
