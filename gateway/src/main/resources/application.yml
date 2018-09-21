@@ -8,10 +8,13 @@ spring:
     name: Gateway
   profiles:
     active: dev
+
 ribbon:
   eureka:
     enabled: true
 
+zuul:
+  sensitiveHeaders:
 
 ---
 
@@ -54,3 +57,17 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://service-registry:33000/eureka/
+
+---
+
+### Enable Eureka profile
+
+spring:
+  profiles: eureka
+
+eureka:
+  client:
+    enabled: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:33000/eureka/
