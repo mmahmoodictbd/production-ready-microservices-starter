@@ -168,3 +168,17 @@ com:
         token-signing-private-key-path: /root/keys/private_key.der
     auth:
       token-signing-public-key-path: /root/keys/public_key.der
+
+---
+
+### Enable Eureka profile
+
+spring:
+  profiles: eureka
+
+eureka:
+  client:
+    enabled: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:33000/eureka/
