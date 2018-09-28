@@ -20,15 +20,6 @@
 
     <properties>
 
-        <modelmapper.version>1.1.0</modelmapper.version>
-
-        <powermock.version>1.7.3</powermock.version>
-        <rest-assured.version>3.0.6</rest-assured.version>
-        <hamcrest-library.version>1.3</hamcrest-library.version>
-        <pitest-maven.version>1.3.2</pitest-maven.version>
-
-        <jjwt.version>0.9.1</jjwt.version>
-        <chumbok-security.version>2.0.0</chumbok-security.version>
     </properties>
 
     <dependencies>
@@ -77,25 +68,21 @@
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
-            <version>${modelmapper.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
-            <version>${jjwt.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.chumbok</groupId>
             <artifactId>chumbok-security</artifactId>
-            <version>2.0.0</version>
         </dependency>
 
         <dependency>
             <groupId>com.chumbok</groupId>
             <artifactId>testable-common</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <!-- Test dependencies -->
@@ -110,33 +97,24 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.hamcrest</groupId>
-                    <artifactId>hamcrest-core</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <!-- This will get hamcrest-core automatically -->
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
-            <version>${hamcrest-library.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito2</artifactId>
-            <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
-            <version>${rest-assured.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -203,12 +181,5 @@
 
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
 
 </project>

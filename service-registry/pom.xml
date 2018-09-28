@@ -14,7 +14,7 @@
 
     <groupId>com.chumbok</groupId>
     <artifactId>service-registry</artifactId>
-    <version>1.0.0T</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <properties>
