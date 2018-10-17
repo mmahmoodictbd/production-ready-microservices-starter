@@ -49,11 +49,12 @@ public class LoginController {
 
     /**
      * LoginController constructor with necessary dependencies.
-     * @param authenticationManager
-     * @param authenticationHandler
-     * @param authTokenBuilder
-     * @param urlUtil
-     * @param cookieUtil
+     *
+     * @param authenticationManager the authentication manager
+     * @param authenticationHandler the authentication handler
+     * @param authTokenBuilder      the auth token builder
+     * @param urlUtil               the url util
+     * @param cookieUtil            the cookie util
      */
     public LoginController(final AuthenticationManager authenticationManager,
                            final AuthenticationHandler authenticationHandler,
@@ -68,10 +69,11 @@ public class LoginController {
 
     /**
      * Handle login request.
-     * @param loginRequest
-     * @param request
-     * @param response
-     * @return
+     *
+     * @param loginRequest the login request
+     * @param request      the request
+     * @param response     the response
+     * @return map
      */
     @PostMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
     public Map<String, String> login(@RequestBody LoginRequest loginRequest,
@@ -137,6 +139,8 @@ public class LoginController {
     /**
      * Removes temporary authentication-related data which may have been stored
      * in the session during the authentication process..
+     *
+     * @param request the request
      */
     protected final void clearAuthenticationAttributes(HttpServletRequest request) {
 

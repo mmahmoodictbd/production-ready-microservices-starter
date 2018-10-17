@@ -14,6 +14,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * The Logout controller.
+ */
 @Slf4j
 @RestController
 public class LogoutController {
@@ -23,11 +26,25 @@ public class LogoutController {
     private final AuthenticationHandler authenticationHandler;
     private final CookieUtil cookieUtil;
 
+    /**
+     * Instantiates a new Logout controller.
+     *
+     * @param authenticationHandler the authentication handler
+     * @param cookieUtil            the cookie util
+     */
     public LogoutController(final AuthenticationHandler authenticationHandler, final CookieUtil cookieUtil) {
         this.authenticationHandler = authenticationHandler;
         this.cookieUtil = cookieUtil;
     }
 
+    /**
+     * Handle logout request.
+     *
+     * @param request        the request
+     * @param response       the response
+     * @param authentication the authentication
+     * @return the response entity
+     */
     @GetMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response,
                                        Authentication authentication) {

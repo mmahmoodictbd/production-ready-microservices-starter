@@ -19,6 +19,9 @@ import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+/**
+ * The Refresh token controller.
+ */
 @Slf4j
 @RestController
 public class RefreshTokenController {
@@ -30,6 +33,13 @@ public class RefreshTokenController {
     private final UrlUtil urlUtil;
     private final AuthTokenBuilder authTokenBuilder;
 
+    /**
+     * Instantiates a new Refresh token controller.
+     *
+     * @param authTokenBuilder the auth token builder
+     * @param cookieUtil       the cookie util
+     * @param urlUtil          the url util
+     */
     public RefreshTokenController(final AuthTokenBuilder authTokenBuilder,
                                   final CookieUtil cookieUtil, final UrlUtil urlUtil) {
 
@@ -38,6 +48,14 @@ public class RefreshTokenController {
         this.authTokenBuilder = authTokenBuilder;
     }
 
+    /**
+     * Handle refresh token request.
+     *
+     * @param request        the request
+     * @param response       the response
+     * @param authentication the authentication
+     * @return the response entity
+     */
     @GetMapping(value = "/refresh", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> refresh(HttpServletRequest request, HttpServletResponse response,
                                                        Authentication authentication) {
