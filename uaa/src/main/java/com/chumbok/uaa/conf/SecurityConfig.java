@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.filter.CorsFilter;
 
 /**
  * Application security config.
@@ -90,12 +91,12 @@ public class SecurityConfig extends AbstractSecurityConfig {
      */
     @Bean
     public SecurityProperties securityProperties() {
-        return SecurityProperties.builder()
-                .enable(chumbokSecurityProperties.isEnable())
-                .assertOrgWith(chumbokSecurityProperties.getAssertOrgWith())
-                .assertTenant(chumbokSecurityProperties.isAssertTenant())
-                .assertTenantWith(chumbokSecurityProperties.getAssertTenantWith())
-                .build();
+        SecurityProperties properties = new SecurityProperties();
+        properties.setEnable(chumbokSecurityProperties.isEnable());
+        properties.setAssertOrgWith(chumbokSecurityProperties.getAssertOrgWith());
+        properties.setAssertTenant(chumbokSecurityProperties.isAssertTenant());
+        properties.setAssertTenantWith(chumbokSecurityProperties.getAssertTenantWith());
+        return properties;
     }
 
     /**
@@ -108,5 +109,13 @@ public class SecurityConfig extends AbstractSecurityConfig {
         super.setSecurityProperties(securityProperties);
     }
 
-
+    /**
+     * Set CorsFilter to super class so that CORS filter is enabled.
+     * @param corsFilters
+     */
+    @Autowired
+    @Override
+    protected void setCorsFilters(CorsFilter corsFilters) {
+        super.setCorsFilters(corsFilters);
+    }
 }

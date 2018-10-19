@@ -35,6 +35,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.chumbok</groupId>
+            <artifactId>chumbok-spring-boot-starter-data-jpa-multitenancy</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
@@ -52,6 +58,12 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.chumbok</groupId>
+            <artifactId>chumbok-security</artifactId>
+            <version>4.1.0</version>
         </dependency>
 
         <dependency>
@@ -73,11 +85,6 @@
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.chumbok</groupId>
-            <artifactId>chumbok-security</artifactId>
         </dependency>
 
         <dependency>
