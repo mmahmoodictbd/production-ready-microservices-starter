@@ -63,7 +63,7 @@
         <dependency>
             <groupId>com.chumbok</groupId>
             <artifactId>chumbok-security</artifactId>
-            <version>4.1.0</version>
+            <version>4.1.1</version>
         </dependency>
 
         <dependency>
