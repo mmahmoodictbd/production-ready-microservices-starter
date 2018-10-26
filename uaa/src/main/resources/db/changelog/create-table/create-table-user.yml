@@ -9,20 +9,19 @@ databaseChangeLog:
           columns:
           - column:
               name: id
-              type: BIGINT
-              autoIncrement: true
+              type: varchar(255)
               constraints:
                 primaryKey: true
                 primaryKeyName: pk_user
                 nullable: false
           - column:
               name: org_id
-              type: BIGINT
+              type: varchar(255)
               constraints:
                 nullable: false
           - column:
               name: tenant_id
-              type: BIGINT
+              type: varchar(255)
               constraints:
                 nullable: false
           - column:
@@ -90,7 +89,7 @@ databaseChangeLog:
           columns:
           - column:
               name: org_id
-              type: BIGINT
+              type: varchar(255)
 
       - createIndex:
           indexName: idx_user_org_id_tenant_id
@@ -98,10 +97,10 @@ databaseChangeLog:
           columns:
           - column:
               name: org_id
-              type: BIGINT
+              type: varchar(255)
           - column:
               name: tenant_id
-              type: BIGINT
+              type: varchar(255)
 
       - createIndex:
           indexName: idx_user_org_id_tenant_id_username
@@ -110,10 +109,10 @@ databaseChangeLog:
           columns:
           - column:
               name: org_id
-              type: BIGINT
+              type: varchar(255)
           - column:
               name: tenant_id
-              type: BIGINT
+              type: varchar(255)
           - column:
               name: username
               type: varchar(255)
@@ -127,7 +126,7 @@ databaseChangeLog:
           columns:
           - column:
               name: user_id
-              type: BIGINT
+              type: varchar(255)
               constraints:
                 nullable: false
           - column:
@@ -147,7 +146,7 @@ databaseChangeLog:
           columns:
           - column:
               name: user_id
-              type: BIGINT
+              type: varchar(255)
           - column:
               name: property_key
               type: varchar(255)

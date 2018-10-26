@@ -10,22 +10,22 @@ databaseChangeLog:
           columns:
           - column:
               name: org_id
-              type: BIGINT
+              type: varchar(255)
               constraints:
                 nullable: false
           - column:
               name: tenant_id
-              type: BIGINT
+              type: varchar(255)
               constraints:
                 nullable: false
           - column:
               name: user_id
-              type: BIGINT
+              type: varchar(255)
               constraints:
                 nullable: false
           - column:
               name: roles_id
-              type: BIGINT
+              type: varchar(255)
               constraints:
                 nullable: false
 
@@ -40,7 +40,7 @@ databaseChangeLog:
           columns:
           - column:
               name: org_id
-              type: BIGINT
+              type: varchar(255)
 
       - createIndex:
           indexName: idx_user_roles_org_id_tenant_id
@@ -48,10 +48,10 @@ databaseChangeLog:
           columns:
           - column:
               name: org_id
-              type: BIGINT
+              type: varchar(255)
           - column:
               name: tenant_id
-              type: BIGINT
+              type: varchar(255)
 
       - createIndex:
           indexName: idx_user_roles_org_id_tenant_id_user_id
@@ -59,11 +59,11 @@ databaseChangeLog:
           columns:
           - column:
               name: org_id
-              type: BIGINT
+              type: varchar(255)
           - column:
               name: tenant_id
-              type: BIGINT
+              type: varchar(255)
           - column:
               name: user_id
-              type: BIGINT
+              type: varchar(255)
 

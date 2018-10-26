@@ -9,20 +9,19 @@ databaseChangeLog:
           columns:
           - column:
               name: id
-              type: BIGINT
-              autoIncrement: true
+              type: varchar(255)
               constraints:
                 primaryKey: true
                 primaryKeyName: pk_role
                 nullable: false
           - column:
               name: org_id
-              type: BIGINT
+              type: varchar(255)
               constraints:
                 nullable: false
           - column:
               name: tenant_id
-              type: BIGINT
+              type: varchar(255)
               constraints:
                 nullable: false
           - column:
@@ -57,7 +56,7 @@ databaseChangeLog:
           columns:
           - column:
               name: org_id
-              type: BIGINT
+              type: varchar(255)
 
       - createIndex:
           indexName: idx_role_org_id_tenant_id
@@ -65,10 +64,10 @@ databaseChangeLog:
           columns:
           - column:
               name: org_id
-              type: BIGINT
+              type: varchar(255)
           - column:
               name: tenant_id
-              type: BIGINT
+              type: varchar(255)
 
       - createIndex:
           indexName: idx_role_org_id_tenant_id_role
@@ -77,10 +76,10 @@ databaseChangeLog:
           columns:
           - column:
               name: org_id
-              type: BIGINT
+              type: varchar(255)
           - column:
               name: tenant_id
-              type: BIGINT
+              type: varchar(255)
           - column:
               name: role
               type: varchar(255)

@@ -9,6 +9,9 @@ databaseChangeLog:
           tableName: org
           columns:
               - column:
+                  name: id
+                  value: 45ad1c1b-9c1d-469a-9cd2-a1c176c675dc
+              - column:
                   name: org
                   value: Chumbok
               - column:

@@ -19,6 +19,9 @@ databaseChangeLog:
                   # MySQL expects braces around SELECT query in INSERT VALUES.
                   valueComputed: "(SELECT id FROM tenant WHERE tenant = 'Chumbok')"
               - column:
+                  name: id
+                  value: 9388c9ea-f453-41de-96cb-d388dedbf091
+              - column:
                   name: username
                   value: admin
               - column:

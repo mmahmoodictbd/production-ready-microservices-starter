@@ -9,8 +9,7 @@ databaseChangeLog:
           columns:
           - column:
               name: id
-              type: BIGINT
-              autoIncrement: true
+              type: varchar(255)
               constraints:
                 primaryKey: true
                 primaryKeyName: pk_org
