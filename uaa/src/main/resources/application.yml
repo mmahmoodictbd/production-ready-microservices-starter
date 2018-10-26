@@ -1,5 +1,12 @@
 ### Common
 
+info:
+  build:
+    artifact: @project.artifactId@
+    name: @project.name@
+    description: @project.description@
+    version: @project.version@
+
 server:
   port: 33002
   tomcat:
