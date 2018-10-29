@@ -2,9 +2,11 @@ package com.chumbok.uaa.conf;
 
 
 import com.chumbok.security.util.EncryptionKeyUtil;
+import com.chumbok.security.util.SecurityUtil;
 import com.chumbok.testable.common.CookieUtil;
 import com.chumbok.testable.common.DateUtil;
 import com.chumbok.testable.common.UrlUtil;
+import com.chumbok.testable.common.UuidUtil;
 import com.chumbok.uaa.util.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,5 +43,15 @@ public class AppConfig {
     @Bean
     public JwtUtil jwtUtil() {
         return new JwtUtil();
+    }
+
+    @Bean
+    public SecurityUtil securityUtil() {
+        return new SecurityUtil();
+    }
+
+    @Bean
+    public UuidUtil uuidUtil() {
+        return new UuidUtil();
     }
 }
