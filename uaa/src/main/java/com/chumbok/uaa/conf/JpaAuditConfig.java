@@ -1,5 +1,6 @@
 package com.chumbok.uaa.conf;
 
+import com.chumbok.security.util.SecurityUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -15,9 +16,20 @@ import java.util.Optional;
 @EnableJpaAuditing
 public class JpaAuditConfig {
 
+    private final SecurityUtil securityUtil;
+
+    /**
+     * Construct JpaAuditConfig with SecurityUtil which provides authenticated user's username.
+     *
+     * @param securityUtil
+     */
+    public JpaAuditConfig(SecurityUtil securityUtil) {
+        this.securityUtil = securityUtil;
+    }
+
     @Bean
-    AuditorAware<String> auditorProvider() {
-        return new AuditorAwareImpl();
+    public AuditorAware<String> auditorProvider() {
+        return new AuditorAwareImpl(securityUtil);
     }
 
     @Bean
@@ -27,10 +39,15 @@ public class JpaAuditConfig {
 
     public static class AuditorAwareImpl implements AuditorAware<String> {
 
+        private final SecurityUtil securityUtil;
+
+        public AuditorAwareImpl(SecurityUtil securityUtil) {
+            this.securityUtil = securityUtil;
+        }
+
         @Override
         public Optional<String> getCurrentAuditor() {
-            //TODO: Get from securityContext when security is ready.
-            return Optional.of("System");
+            return Optional.of(securityUtil.getAuthenticatedUser().get().getUsername());
         }
     }
 }
