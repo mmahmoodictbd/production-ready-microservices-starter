@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 
-import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Slf4j
 @ControllerAdvice
@@ -18,13 +18,13 @@ public class ExceptionHandlerAdvice extends AbstractExceptionHandlerAdvice {
 
     public ExceptionHandlerAdvice() {
         super();
-        registerMapping(AuthTokenConsumeException.class, "FORBIDDEN", "Permission denied.", FORBIDDEN);
+        registerMapping(AuthTokenConsumeException.class, "UNAUTHORIZED_REQUEST", "Could not authenticate.", UNAUTHORIZED);
     }
     
     @ResponseBody
     @ExceptionHandler(Throwable.class)
     public ErrorResponse getErrorResponse(final Throwable ex, final HttpServletResponse response) {
-        return getErrorResponse(ex, response);
+        return super.getErrorResponse(ex, response);
     }
 
 }
