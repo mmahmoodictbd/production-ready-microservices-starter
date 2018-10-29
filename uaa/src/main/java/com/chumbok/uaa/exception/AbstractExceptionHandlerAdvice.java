@@ -62,7 +62,7 @@ public abstract class AbstractExceptionHandlerAdvice {
         response.setStatus(mapping.getStatus().value());
 
         ErrorResponse errorResponse;
-        if (isValidationException(ex)) {
+        if (isValidationException(ex) && ((ValidationException) ex).getFieldErrors() != null) {
             errorResponse = new ErrorResponse(mapping.getCode(), mapping.getMessage(),
                     ((ValidationException) ex).getFieldErrors());
         } else {

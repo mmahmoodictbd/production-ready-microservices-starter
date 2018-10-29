@@ -10,16 +10,21 @@ import java.util.Map;
 @Getter
 public class ValidationException extends RuntimeException implements PresentationException {
 
-    private Map<String, String> fieldErrors = new HashMap<>();
+    private Map<String, String> fieldErrors;
 
     public ValidationException(String message) {
         super(message);
     }
 
     public ValidationException(BindingResult bindingResult) {
+
         super("Invalid request received.");
-        for (FieldError error : bindingResult.getFieldErrors()) {
-            fieldErrors.put(error.getField(), error.getDefaultMessage());
+
+        if (!bindingResult.getFieldErrors().isEmpty()) {
+            fieldErrors = new HashMap<>();
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                fieldErrors.put(error.getField(), error.getDefaultMessage());
+            }
         }
     }
     
