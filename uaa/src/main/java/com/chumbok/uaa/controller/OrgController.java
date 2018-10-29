@@ -1,20 +1,96 @@
 package com.chumbok.uaa.controller;
 
+import com.chumbok.uaa.dto.request.OrgCreateUpdateRequest;
+import com.chumbok.uaa.dto.response.IdentityResponse;
+import com.chumbok.uaa.dto.response.OrgResponse;
+import com.chumbok.uaa.dto.response.OrgsResponse;
+import com.chumbok.uaa.exception.presentation.ValidationException;
+import com.chumbok.uaa.service.OrgService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
-import java.util.Map;
+import javax.validation.Valid;
 
+
+/**
+ * Handles orgs related APIs.
+ */
 @Slf4j
 @RestController
 @RequestMapping("/orgs")
 public class OrgController {
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public Map<String, String> connect() {
-        return Collections.singletonMap("x", "y");
+    private final OrgService orgService;
+
+    /**
+     * Construct OrgController with OrgService.
+     *
+     * @param orgService
+     */
+    public OrgController(OrgService orgService) {
+        this.orgService = orgService;
+    }
+
+    /**
+     * Get all org page.
+     *
+     * @param pageable
+     */
+    @GetMapping
+    public OrgsResponse orgList(@PageableDefault(size = 10) Pageable pageable) {
+        return orgService.getOrgs(pageable);
+    }
+
+    /**
+     * Get org by id.
+     *
+     * @param id
+     * @return OrgResponse
+     */
+    @GetMapping("/{id}")
+    public OrgResponse orgById(@PathVariable String id) {
+        return orgService.getOrg(id);
+    }
+
+    /**
+     * Create new org.
+     *
+     * @param orgCreateUpdateRequest
+     * @param bindingResult
+     * @return Id of created Org.
+     */
+    @PostMapping
+    public ResponseEntity<IdentityResponse> createOrg(
+            @RequestBody @Valid OrgCreateUpdateRequest orgCreateUpdateRequest,
+            BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult);
+        }
+
+        return new ResponseEntity(orgService.create(orgCreateUpdateRequest), HttpStatus.CREATED);
+    }
+
+    /**
+     * Delete org by id with all tenants and users.
+     *
+     * @param id
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOrg(@PathVariable String id) {
+
+        orgService.delete(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

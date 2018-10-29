@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
  * Org repository.
  */
 @Repository
-public interface OrgRepository extends JpaRepository<Org, Long> {
+public interface OrgRepository extends JpaRepository<Org, String> {
 
+    boolean existsByOrg(String org);
 }
