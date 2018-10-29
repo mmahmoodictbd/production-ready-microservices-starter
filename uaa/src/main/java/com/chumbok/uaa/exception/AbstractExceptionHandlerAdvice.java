@@ -1,7 +1,11 @@
 package com.chumbok.uaa.exception;
 
 import com.chumbok.uaa.exception.presentation.BadRequestException;
+import com.chumbok.uaa.exception.presentation.ForbiddenException;
 import com.chumbok.uaa.exception.presentation.InternalErrorException;
+import com.chumbok.uaa.exception.presentation.PresentationException;
+import com.chumbok.uaa.exception.presentation.ResourceNotFoundException;
+import com.chumbok.uaa.exception.presentation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
@@ -12,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
@@ -26,18 +31,26 @@ public abstract class AbstractExceptionHandlerAdvice {
 
     public AbstractExceptionHandlerAdvice() {
 
-        registerMapping(InternalErrorException.class,
-                "SERVER_ERROR", "Internal server error.", INTERNAL_SERVER_ERROR);
-
-        registerMapping(BadRequestException.class,
-                "BAD_REQUEST", "Invalid request received.", BAD_REQUEST);
-
         registerMapping(AuthenticationException.class,
                 "UNAUTHORIZED_REQUEST", "Could not authenticate.", UNAUTHORIZED);
 
         registerMapping(NoHandlerFoundException.class,
                 "RESOURCE_NOT_FOUND", "Could not find the resource.", NOT_FOUND);
 
+        registerMapping(InternalErrorException.class,
+                "SERVER_ERROR", "Internal server error.", INTERNAL_SERVER_ERROR);
+
+        registerMapping(BadRequestException.class,
+                "BAD_REQUEST", "Invalid request received.", BAD_REQUEST);
+
+        registerMapping(ResourceNotFoundException.class,
+                "RESOURCE_NOT_FOUND", "Could not find the resource.", NOT_FOUND);
+
+        registerMapping(ForbiddenException.class,
+                "FORBIDDEN_REQUEST", "User does not have enough permission.", FORBIDDEN);
+
+        registerMapping(ValidationException.class,
+                "BAD_REQUEST", "Invalid request received.", BAD_REQUEST);
     }
 
     protected ErrorResponse getErrorResponse(final Throwable ex, final HttpServletResponse response) {
@@ -47,7 +60,20 @@ public abstract class AbstractExceptionHandlerAdvice {
         log.error("{} ({}): {}", mapping.getMessage(), mapping.getCode(), ex.getMessage(), ex);
 
         response.setStatus(mapping.getStatus().value());
-        return new ErrorResponse(mapping.getCode(), mapping.getMessage());
+
+        ErrorResponse errorResponse;
+        if (isValidationException(ex)) {
+            errorResponse = new ErrorResponse(mapping.getCode(), mapping.getMessage(),
+                    ((ValidationException) ex).getFieldErrors());
+        } else {
+            if (isPresentationException(ex)) {
+                errorResponse = new ErrorResponse(mapping.getCode(), ex.getMessage());
+            } else {
+                errorResponse = new ErrorResponse(mapping.getCode(), mapping.getMessage());
+            }
+        }
+
+        return errorResponse;
     }
 
     public ExceptionMapping findExceptionMapping(Throwable ex) {
@@ -79,4 +105,11 @@ public abstract class AbstractExceptionHandlerAdvice {
         exceptionMappings.put(clazz, new ExceptionMapping(code, message, status));
     }
 
+    private boolean isPresentationException(Throwable ex) {
+        return PresentationException.class.isAssignableFrom(ex.getClass());
+    }
+
+    private boolean isValidationException(Throwable ex) {
+        return ValidationException.class.isAssignableFrom(ex.getClass());
+    }
 }
