@@ -90,6 +90,7 @@
         <dependency>
             <groupId>com.chumbok</groupId>
             <artifactId>testable-common</artifactId>
+            <version>1.1.1</version>
         </dependency>
 
         <!-- Test dependencies -->
@@ -110,12 +111,6 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito2</artifactId>
             <scope>test</scope>
         </dependency>
 
