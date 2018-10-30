@@ -47,7 +47,8 @@ public class WebSecurityConfigIT {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
-                .andExpect(jsonPath("$.message").value("Invalid request received."))
+                .andExpect(jsonPath("$.message").value(
+                        "Login request should contain org, tenant, username and password."))
                 .andExpect(cookie().doesNotExist("Authorization"))
                 .andDo(print());
     }

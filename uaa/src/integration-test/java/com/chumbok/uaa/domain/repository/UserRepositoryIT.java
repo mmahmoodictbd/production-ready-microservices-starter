@@ -1,5 +1,7 @@
 package com.chumbok.uaa.domain.repository;
 
+import com.chumbok.security.util.SecurityUtil;
+import com.chumbok.security.util.SecurityUtil.AuthenticatedUser;
 import com.chumbok.uaa.Application;
 import com.chumbok.uaa.domain.model.Org;
 import com.chumbok.uaa.domain.model.Tenant;
@@ -12,14 +14,21 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Collections;
+import java.util.Optional;
+
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = {Application.class})
+@SpringBootTest(classes = {Application.class, DataJpaAuditIT.Config.class})
 @ActiveProfiles("it")
 public class UserRepositoryIT {
 
@@ -46,23 +55,32 @@ public class UserRepositoryIT {
     @Before
     public void init(){
 
-        org1 = orgRepository.saveAndFlush(new Org("Org1"));
+        org1 = new Org();
+        org1.setId("uuid1");
+        org1.setOrg("Org1");
+        org1 = orgRepository.saveAndFlush(org1);
 
         org1Tenant1 = new Tenant("Tenant1");
+        org1Tenant1.setId("uuid2");
         org1Tenant1.setOrg(org1);
         org1Tenant1 = tenantRepository.saveAndFlush(org1Tenant1);
 
         org1Tenant2 = new Tenant("Tenant2");
+        org1Tenant2.setId("uuid3");
         org1Tenant2.setOrg(org1);
         org1Tenant2 = tenantRepository.saveAndFlush(org1Tenant2);
 
-        org2 = orgRepository.saveAndFlush(new Org("Org2"));
+        org2 = new Org("Org2");
+        org2.setId("uuid12");
+        org2 = orgRepository.saveAndFlush(org2);
 
         org2Tenant1 = new Tenant("Tenant1");
+        org2Tenant1.setId("uuid4");
         org2Tenant1.setOrg(org2);
         org2Tenant1 = tenantRepository.saveAndFlush(org1Tenant1);
 
         org2Tenant2 = new Tenant("Tenant2");
+        org2Tenant2.setId("uuid5");
         org2Tenant2.setOrg(org1);
         org2Tenant2 = tenantRepository.saveAndFlush(org1Tenant2);
     }
@@ -82,6 +100,7 @@ public class UserRepositoryIT {
         expectedException.expect(DataIntegrityViolationException.class);
 
         User user1 = new User();
+        user1.setId("uuid6");
         user1.setOrg(org1);
         user1.setTenant(org1Tenant1);
         user1.setUsername("SameUsername");
@@ -92,6 +111,7 @@ public class UserRepositoryIT {
         // When
 
         User user2 = new User();
+        user2.setId("uuid7");
         user2.setOrg(org1);
         user2.setTenant(org1Tenant1);
         user2.setUsername("SameUsername");
@@ -109,27 +129,29 @@ public class UserRepositoryIT {
         // Given
 
         User user1 = new User();
+        user1.setId("uuid8");
         user1.setOrg(org1);
         user1.setTenant(org1Tenant1);
         user1.setUsername("SameUsername");
         user1.setPassword("UserPassHash");
         user1.setDisplayName("DisplayName");
-        userRepository.saveAndFlush(user1);
+        user1 = userRepository.saveAndFlush(user1);
 
         // When
 
         User user2 = new User();
+        user2.setId("uuid9");
         user2.setOrg(org1);
         user2.setTenant(org1Tenant2);
         user2.setUsername("SameUsername");
         user2.setPassword("UserPassHash");
         user2.setDisplayName("DisplayName");
-        userRepository.saveAndFlush(user2);
+        user2 = userRepository.saveAndFlush(user2);
 
         // Then
 
-        assertNotNull(user1.getId());
-        assertNotNull(user2.getId());
+        assertNotNull(user1.getCreatedAt());
+        assertNotNull(user2.getCreatedAt());
     }
 
     @Test
@@ -138,27 +160,28 @@ public class UserRepositoryIT {
         // Given
 
         User user1 = new User();
+        user1.setId("uuid10");
         user1.setOrg(org1);
         user1.setTenant(org1Tenant1);
         user1.setUsername("SameUsername");
         user1.setPassword("UserPassHash");
         user1.setDisplayName("DisplayName");
-        userRepository.saveAndFlush(user1);
+        user1 = userRepository.saveAndFlush(user1);
 
         // When
 
         User user2 = new User();
+        user2.setId("uuid11");
         user2.setOrg(org2);
         user2.setTenant(org2Tenant1);
         user2.setUsername("SameUsername");
         user2.setPassword("UserPassHash");
         user2.setDisplayName("DisplayName");
-        userRepository.saveAndFlush(user2);
+        user2 = userRepository.saveAndFlush(user2);
 
         // Then
 
-        assertNotNull(user1.getId());
-        assertNotNull(user2.getId());
+        assertNotNull(user1.getCreatedAt());
+        assertNotNull(user2.getCreatedAt());
     }
-
 }
