@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Tenant repository.
@@ -16,16 +15,14 @@ import java.util.Optional;
 @Repository
 public interface TenantRepository extends JpaRepository<Tenant, String> {
 
-
     Page<Tenant> findAllByOrgId(String orgId, Pageable pageable);
 
-    Optional<Tenant> findByOrgIdAndId(String orgId, String tenantId);
+    @Query("SELECT t.id FROM Tenant t WHERE t.org.id = ?1")
+    List<String> findTenantIdsByOrgId(String orgId);
 
-    @Query("SELECT count(t) > 0 from Tenant t WHERE t.org.id = ?1 AND t.tenant = ?2")
-    boolean existsByOrgIdAndTenant(String orgId, String tenant);
-
+    @Query("SELECT count(t) > 0 FROM Tenant t WHERE t.org.id = ?1 AND t.tenant = ?2")
+    boolean isTenantExist(String orgId, String tenant);
 
     void deleteAllByOrgId(String orgId);
 
-    List<Tenant> findAllByOrgId(String orgId);
 }

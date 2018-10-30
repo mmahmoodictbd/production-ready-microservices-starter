@@ -2,7 +2,6 @@ package com.chumbok.uaa.service;
 
 import com.chumbok.testable.common.UuidUtil;
 import com.chumbok.uaa.domain.model.Org;
-import com.chumbok.uaa.domain.model.Tenant;
 import com.chumbok.uaa.domain.repository.OrgRepository;
 import com.chumbok.uaa.domain.repository.TenantRepository;
 import com.chumbok.uaa.domain.repository.UserRepository;
@@ -22,8 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.chumbok.uaa.security.DefaultSecurityRoleConstants.ROLE_SUPERADMIN;
+
+/**
+ * Handles ORG related APIs
+ */
 @Service
-@Transactional
 public class OrgService {
 
     private final OrgRepository orgRepository;
@@ -31,6 +34,14 @@ public class OrgService {
     private final UserRepository userRepository;
     private final UuidUtil uuidUtil;
 
+    /**
+     * Instantiates a new Org service.
+     *
+     * @param orgRepository    the org repository
+     * @param tenantRepository the tenant repository
+     * @param userRepository   the user repository
+     * @param uuidUtil         the uuid util
+     */
     public OrgService(OrgRepository orgRepository, TenantRepository tenantRepository,
                       UserRepository userRepository, UuidUtil uuidUtil) {
         this.orgRepository = orgRepository;
@@ -39,7 +50,14 @@ public class OrgService {
         this.uuidUtil = uuidUtil;
     }
 
-    @Secured("ROLE_SUPERADMIN")
+    /**
+     * Gets pageable orgs.
+     *
+     * @param pageable the pageable
+     * @return the orgs page
+     */
+    @Secured(ROLE_SUPERADMIN)
+    @Transactional(readOnly = true)
     public OrgsResponse getOrgs(Pageable pageable) {
 
         Page<Org> orgPage = orgRepository.findAll(pageable);
@@ -63,15 +81,28 @@ public class OrgService {
                 .build();
     }
 
-    @Secured("ROLE_SUPERADMIN")
-    public OrgResponse getOrg(String id) {
+    /**
+     * Gets org.
+     *
+     * @param orgId the orgId
+     * @return the org
+     */
+    @Secured(ROLE_SUPERADMIN)
+    @Transactional(readOnly = true)
+    public OrgResponse getOrg(String orgId) {
 
-        Org org = getOrgOrThrowNotFoundException(id);
+        Org org = getOrgOrThrowNotFoundException(orgId);
         return OrgResponse.builder().id(org.getId()).name(org.getOrg()).build();
     }
 
-    @Secured("ROLE_SUPERADMIN")
-    public IdentityResponse create(OrgCreateUpdateRequest orgCreateUpdateRequest) {
+    /**
+     * Create Org.
+     *
+     * @param orgCreateUpdateRequest the org create update request
+     * @return the uuid
+     */
+    @Secured(ROLE_SUPERADMIN)
+    public IdentityResponse createOrg(OrgCreateUpdateRequest orgCreateUpdateRequest) {
 
         if (orgRepository.existsByOrg(orgCreateUpdateRequest.getName())) {
             throw new ValidationException("Org '" + orgCreateUpdateRequest.getName() + "' is already exist.");
@@ -85,26 +116,28 @@ public class OrgService {
         return new IdentityResponse(uuid);
     }
 
-    @Secured("ROLE_SUPERADMIN")
-    public void delete(String id) {
+    /**
+     * Delete Org.
+     *
+     * @param orgId the orgId
+     */
+    @Secured(ROLE_SUPERADMIN)
+    public void deleteOrg(String orgId) {
 
-        Optional<Org> orgOptional = orgRepository.findById(id);
+        Org org = getOrgOrThrowNotFoundException(orgId);
 
-        if (!orgOptional.isPresent()) {
-            throw new ResourceNotFoundException("Org not found.");
+        List<String> tenantIdList = tenantRepository.findTenantIdsByOrgId(org.getId());
+        for (String tenantId : tenantIdList) {
+            userRepository.deleteAllByOrgIdAndTenantId(orgId, tenantId);
         }
 
-        List<Tenant> tenantList = tenantRepository.findAllByOrgId(orgOptional.get().getId());
-        for (Tenant tenant : tenantList) {
-            userRepository.deleteAllByOrgIdAndTenantId(id, tenant.getId());
-        }
-
-        orgRepository.deleteById(id);
+        tenantRepository.deleteAllByOrgId(orgId);
+        orgRepository.deleteById(orgId);
     }
 
-    private Org getOrgOrThrowNotFoundException(String id) {
+    private Org getOrgOrThrowNotFoundException(String orgId) {
 
-        Optional<Org> orgOptional = orgRepository.findById(id);
+        Optional<Org> orgOptional = orgRepository.findById(orgId);
 
         if (!orgOptional.isPresent()) {
             throw new ResourceNotFoundException("Org not found.");

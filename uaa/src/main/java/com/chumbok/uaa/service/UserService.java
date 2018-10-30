@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,6 +31,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.chumbok.uaa.security.DefaultSecurityRoleConstants.ROLE_ADMIN;
+import static com.chumbok.uaa.security.DefaultSecurityRoleConstants.ROLE_SUPERADMIN;
 
 /**
  * The type User service.
@@ -79,7 +83,8 @@ public class UserService {
      * @param pageable the pageable
      * @return the users
      */
-    @Secured("ROLE_SUPERADMIN")
+    @Secured(ROLE_SUPERADMIN)
+    @Transactional(readOnly = true)
     public UsersResponse getUsers(String orgId, String tenantId, Pageable pageable) {
         return getUsersResponse(userRepository.findAllByOrgIdAndTenantId(orgId, tenantId, pageable));
     }
@@ -90,7 +95,8 @@ public class UserService {
      * @param pageable the pageable
      * @return the users
      */
-    @Secured("ROLE_ADMIN")
+    @Secured(ROLE_ADMIN)
+    @Transactional(readOnly = true)
     public UsersResponse getUsers(Pageable pageable) {
         return getUsersResponse(userRepository.findAll(pageable));
     }
@@ -103,7 +109,8 @@ public class UserService {
      * @param id       the id
      * @return the user
      */
-    @Secured("ROLE_SUPERADMIN")
+    @Secured(ROLE_SUPERADMIN)
+    @Transactional(readOnly = true)
     public UserResponse getUser(String orgId, String tenantId, String id) {
         return getUserResponse(userRepository.findByOrgIdAndTenantIdAndId(orgId, tenantId, id));
     }
@@ -114,7 +121,8 @@ public class UserService {
      * @param id the id
      * @return the user
      */
-    @Secured("ROLE_ADMIN")
+    @Secured(ROLE_ADMIN)
+    @Transactional(readOnly = true)
     public UserResponse getUser(String id) {
         return getUserResponse(userRepository.findById(id));
     }
@@ -127,7 +135,7 @@ public class UserService {
      * @param userCreateRequest the user create request
      * @return the identity response
      */
-    @Secured("ROLE_SUPERADMIN")
+    @Secured(ROLE_SUPERADMIN)
     public IdentityResponse create(String orgId, String tenantId, UserCreateRequest userCreateRequest) {
 
         Optional<Org> orgOptional = orgRepository.findById(orgId);
@@ -149,7 +157,7 @@ public class UserService {
      * @param userCreateRequest the user create request
      * @return the identity response
      */
-    @Secured("ROLE_ADMIN")
+    @Secured(ROLE_ADMIN)
     public IdentityResponse create(UserCreateRequest userCreateRequest) {
 
         Optional<SecurityUtil.AuthenticatedUser> authenticatedUser = securityUtil.getAuthenticatedUser();
@@ -171,7 +179,7 @@ public class UserService {
      * @param id                the id
      * @param userUpdateRequest the user update request
      */
-    @Secured("ROLE_SUPERADMIN")
+    @Secured(ROLE_SUPERADMIN)
     public void update(String orgId, String tenantId, String id, UserUpdateRequest userUpdateRequest) {
         updateUser(userUpdateRequest, userRepository.findByOrgIdAndTenantIdAndId(orgId, tenantId, id));
     }
@@ -182,7 +190,7 @@ public class UserService {
      * @param id                the id
      * @param userUpdateRequest the user update request
      */
-    @Secured("ROLE_ADMIN")
+    @Secured(ROLE_ADMIN)
     public void update(String id, UserUpdateRequest userUpdateRequest) {
         updateUser(userUpdateRequest, userRepository.findById(id));
     }
@@ -194,7 +202,7 @@ public class UserService {
      * @param tenantId the tenant id
      * @param id       the id
      */
-    @Secured("ROLE_SUPERADMIN")
+    @Secured(ROLE_SUPERADMIN)
     public void delete(String orgId, String tenantId, String id) {
         deleteUser(id, userRepository.findByOrgIdAndTenantIdAndId(orgId, tenantId, id));
     }
@@ -204,12 +212,13 @@ public class UserService {
      *
      * @param id the id
      */
-    @Secured("ROLE_ADMIN")
+    @Secured(ROLE_ADMIN)
     public void delete(String id) {
         deleteUser(id, userRepository.findById(id));
     }
 
     private UsersResponse getUsersResponse(Page<User> userPage) {
+
         long totalElements = userPage.getTotalElements();
         int totalPage = userPage.getTotalPages();
         int size = userPage.getSize();

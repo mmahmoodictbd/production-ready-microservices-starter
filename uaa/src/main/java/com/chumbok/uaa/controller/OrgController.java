@@ -80,19 +80,19 @@ public class OrgController {
             throw new ValidationException(bindingResult);
         }
 
-        return new ResponseEntity(orgService.create(orgCreateUpdateRequest), HttpStatus.CREATED);
+        return new ResponseEntity(orgService.createOrg(orgCreateUpdateRequest), HttpStatus.CREATED);
     }
 
     /**
      * Delete org by id with all tenants and users.
      *
      * @param id the id
-     * @return the response entity
+     * @return HTTP 204 No Content
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrg(@PathVariable String id) {
 
-        orgService.delete(id);
+        orgService.deleteOrg(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

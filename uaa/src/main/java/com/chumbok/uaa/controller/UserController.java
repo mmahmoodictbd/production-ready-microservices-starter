@@ -109,7 +109,7 @@ public class UserController {
      * Delete user by id with all tenants and users.
      *
      * @param id the id
-     * @return the response entity
+     * @return HTTP 204 No Content
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {

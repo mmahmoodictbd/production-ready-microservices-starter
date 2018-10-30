@@ -124,7 +124,7 @@ public class TenantUserController {
      * @param orgId    the org id
      * @param tenantId the tenant id
      * @param id       the id
-     * @return the response entity
+     * @return HTTP 204 No Content
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable String orgId, @PathVariable String tenantId,

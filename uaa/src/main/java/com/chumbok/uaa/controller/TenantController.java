@@ -43,7 +43,7 @@ public class TenantController {
     }
 
     /**
-     * Get all tenant page.
+     * Get tenant page.
      *
      * @param orgId    the org id
      * @param pageable the pageable
@@ -84,7 +84,7 @@ public class TenantController {
             throw new ValidationException(bindingResult);
         }
 
-        return new ResponseEntity(tenantService.create(orgId, tenantCreateUpdateRequest), HttpStatus.CREATED);
+        return new ResponseEntity(tenantService.createTenant(orgId, tenantCreateUpdateRequest), HttpStatus.CREATED);
     }
 
     /**
@@ -92,12 +92,12 @@ public class TenantController {
      *
      * @param orgId    the org id
      * @param tenantId the tenant id
-     * @return the response entity
+     * @return HTTP 204 No Content
      */
     @DeleteMapping("/{tenantId}")
     public ResponseEntity<Void> deleteTenant(@PathVariable String orgId, @PathVariable String tenantId) {
 
-        tenantService.delete(orgId, tenantId);
+        tenantService.deleteTenant(orgId, tenantId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

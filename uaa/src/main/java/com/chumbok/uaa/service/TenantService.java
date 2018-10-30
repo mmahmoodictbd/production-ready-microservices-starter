@@ -22,8 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.chumbok.uaa.security.DefaultSecurityRoleConstants.ROLE_SUPERADMIN;
+
+/**
+ * Handles TENANT related APIs
+ */
 @Service
-@Transactional
 public class TenantService {
 
     private final OrgRepository orgRepository;
@@ -31,6 +35,14 @@ public class TenantService {
     private final UserRepository userRepository;
     private final UuidUtil uuidUtil;
 
+    /**
+     * Instantiates a new Tenant service.
+     *
+     * @param orgRepository    the org repository
+     * @param tenantRepository the tenant repository
+     * @param userRepository   the user repository
+     * @param uuidUtil         the uuid util
+     */
     public TenantService(OrgRepository orgRepository, TenantRepository tenantRepository,
                          UserRepository userRepository, UuidUtil uuidUtil) {
         this.orgRepository = orgRepository;
@@ -39,7 +51,15 @@ public class TenantService {
         this.uuidUtil = uuidUtil;
     }
 
-    @Secured("ROLE_SUPERADMIN")
+    /**
+     * Gets tenants page.
+     *
+     * @param orgId    the org id
+     * @param pageable the pageable
+     * @return the tenants
+     */
+    @Secured(ROLE_SUPERADMIN)
+    @Transactional(readOnly = true)
     public TenantsResponse getTenants(String orgId, Pageable pageable) {
 
         Page<Tenant> tenantPage = tenantRepository.findAllByOrgId(orgId, pageable);
@@ -67,10 +87,24 @@ public class TenantService {
                 .build();
     }
 
-    @Secured("ROLE_SUPERADMIN")
+    /**
+     * Gets tenant.
+     *
+     * @param orgId    the org id
+     * @param tenantId the tenant id
+     * @return the tenant
+     */
+    @Secured(ROLE_SUPERADMIN)
+    @Transactional(readOnly = true)
     public TenantResponse getTenant(String orgId, String tenantId) {
 
-        Optional<Tenant> tenantOptional = tenantRepository.findByOrgIdAndId(orgId, tenantId);
+        Optional<Org> orgOptional = orgRepository.findById(orgId);
+
+        if (!orgOptional.isPresent()) {
+            throw new ResourceNotFoundException("Org not found.");
+        }
+
+        Optional<Tenant> tenantOptional = tenantRepository.findById(tenantId);
         if (!tenantOptional.isPresent()) {
             throw new ResourceNotFoundException("Tenant not found.");
         }
@@ -83,16 +117,23 @@ public class TenantService {
                 .build();
     }
 
-    @Secured("ROLE_SUPERADMIN")
-    public IdentityResponse create(String orgId, TenantCreateUpdateRequest tenantCreateUpdateRequest) {
+    /**
+     * Create tenant.
+     *
+     * @param orgId                     the org id
+     * @param tenantCreateUpdateRequest the tenant create update request
+     * @return the identity response
+     */
+    @Secured(ROLE_SUPERADMIN)
+    public IdentityResponse createTenant(String orgId, TenantCreateUpdateRequest tenantCreateUpdateRequest) {
 
         Optional<Org> orgOptional = orgRepository.findById(orgId);
 
         if (!orgOptional.isPresent()) {
-            throw new ValidationException("Org not found.");
+            throw new ResourceNotFoundException("Org not found.");
         }
 
-        if (tenantRepository.existsByOrgIdAndTenant(orgId, tenantCreateUpdateRequest.getName())) {
+        if (tenantRepository.isTenantExist(orgId, tenantCreateUpdateRequest.getName())) {
             throw new ValidationException("Tenant '" + tenantCreateUpdateRequest.getName() + "' is already exist.");
         }
 
@@ -105,8 +146,20 @@ public class TenantService {
         return new IdentityResponse(uuid);
     }
 
-    @Secured("ROLE_SUPERADMIN")
-    public void delete(String orgId, String tenantId) {
+    /**
+     * Delete tenant.
+     *
+     * @param orgId    the org id
+     * @param tenantId the tenant id
+     */
+    @Secured(ROLE_SUPERADMIN)
+    public void deleteTenant(String orgId, String tenantId) {
+
+        Optional<Org> orgOptional = orgRepository.findById(orgId);
+
+        if (!orgOptional.isPresent()) {
+            throw new ResourceNotFoundException("Org not found.");
+        }
 
         Optional<Tenant> tenantOptional = tenantRepository.findById(tenantId);
         if (!tenantOptional.isPresent()) {
