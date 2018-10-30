@@ -36,7 +36,7 @@ public class OrgController {
     /**
      * Construct OrgController with OrgService.
      *
-     * @param orgService
+     * @param orgService the org service
      */
     public OrgController(OrgService orgService) {
         this.orgService = orgService;
@@ -45,7 +45,8 @@ public class OrgController {
     /**
      * Get all org page.
      *
-     * @param pageable
+     * @param pageable the pageable
+     * @return the orgs response
      */
     @GetMapping
     public OrgsResponse orgList(@PageableDefault(size = 10) Pageable pageable) {
@@ -55,8 +56,8 @@ public class OrgController {
     /**
      * Get org by id.
      *
-     * @param id
-     * @return OrgResponse
+     * @param id the id
+     * @return OrgResponse org response
      */
     @GetMapping("/{id}")
     public OrgResponse orgById(@PathVariable String id) {
@@ -66,8 +67,8 @@ public class OrgController {
     /**
      * Create new org.
      *
-     * @param orgCreateUpdateRequest
-     * @param bindingResult
+     * @param orgCreateUpdateRequest the org create update request
+     * @param bindingResult          the binding result
      * @return Id of created Org.
      */
     @PostMapping
@@ -85,7 +86,8 @@ public class OrgController {
     /**
      * Delete org by id with all tenants and users.
      *
-     * @param id
+     * @param id the id
+     * @return the response entity
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrg(@PathVariable String id) {
@@ -93,4 +95,5 @@ public class OrgController {
         orgService.delete(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
+
 }

@@ -1,9 +1,11 @@
 package com.chumbok.uaa.service;
 
-import com.chumbok.security.util.SecurityUtil;
 import com.chumbok.testable.common.UuidUtil;
 import com.chumbok.uaa.domain.model.Org;
+import com.chumbok.uaa.domain.model.Tenant;
 import com.chumbok.uaa.domain.repository.OrgRepository;
+import com.chumbok.uaa.domain.repository.TenantRepository;
+import com.chumbok.uaa.domain.repository.UserRepository;
 import com.chumbok.uaa.dto.request.OrgCreateUpdateRequest;
 import com.chumbok.uaa.dto.response.IdentityResponse;
 import com.chumbok.uaa.dto.response.OrgResponse;
@@ -14,22 +16,27 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class OrgService {
 
-    private final UuidUtil uuidUtil;
-    private final SecurityUtil securityUtil;
     private final OrgRepository orgRepository;
+    private final TenantRepository tenantRepository;
+    private final UserRepository userRepository;
+    private final UuidUtil uuidUtil;
 
-    public OrgService(OrgRepository orgRepository, UuidUtil uuidUtil, SecurityUtil securityUtil) {
-        this.uuidUtil = uuidUtil;
-        this.securityUtil = securityUtil;
+    public OrgService(OrgRepository orgRepository, TenantRepository tenantRepository,
+                      UserRepository userRepository, UuidUtil uuidUtil) {
         this.orgRepository = orgRepository;
+        this.tenantRepository = tenantRepository;
+        this.userRepository = userRepository;
+        this.uuidUtil = uuidUtil;
     }
 
     @Secured("ROLE_SUPERADMIN")
@@ -59,7 +66,7 @@ public class OrgService {
     @Secured("ROLE_SUPERADMIN")
     public OrgResponse getOrg(String id) {
 
-        Org org = getOrgThrowIfNotFound(id);
+        Org org = getOrgOrThrowNotFoundException(id);
         return OrgResponse.builder().id(org.getId()).name(org.getOrg()).build();
     }
 
@@ -81,12 +88,21 @@ public class OrgService {
     @Secured("ROLE_SUPERADMIN")
     public void delete(String id) {
 
-        // TODO: Delete all tenants and their users.
-        Org org = getOrgThrowIfNotFound(id);
+        Optional<Org> orgOptional = orgRepository.findById(id);
+
+        if (!orgOptional.isPresent()) {
+            throw new ResourceNotFoundException("Org not found.");
+        }
+
+        List<Tenant> tenantList = tenantRepository.findAllByOrgId(orgOptional.get().getId());
+        for (Tenant tenant : tenantList) {
+            userRepository.deleteAllByOrgIdAndTenantId(id, tenant.getId());
+        }
+
         orgRepository.deleteById(id);
     }
 
-    private Org getOrgThrowIfNotFound(String id) {
+    private Org getOrgOrThrowNotFoundException(String id) {
 
         Optional<Org> orgOptional = orgRepository.findById(id);
 

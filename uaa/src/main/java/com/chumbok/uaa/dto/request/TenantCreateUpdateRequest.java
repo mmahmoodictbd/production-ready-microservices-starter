@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 
 @Data
 @Builder
-public class OrgCreateUpdateRequest {
+public class TenantCreateUpdateRequest {
 
     @NotNull
     @Size(min = 1, max = 255)
