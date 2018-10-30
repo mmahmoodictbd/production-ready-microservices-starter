@@ -20,6 +20,18 @@
     </description>
 
     <properties>
+        <sonar.organization>mmahmoodictbd-github</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.projectName>production-ready-microservices-starter</sonar.projectName>
+        <sonar.language>java</sonar.language>
+        <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
+        <sonar.sources>src/main/java</sonar.sources>
+        <sonar.binaries>target/classes</sonar.binaries>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.jacoco.reportPaths>
+            ${project.build.directory}/jacoco.exec,
+            ${project.build.directory}/jacoco-it.exec
+        </sonar.jacoco.reportPaths>
     </properties>
 
     <modules>
@@ -27,6 +39,15 @@
         <module>service-registry</module>
         <module>uaa</module>
     </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
     <repositories>
         <repository>

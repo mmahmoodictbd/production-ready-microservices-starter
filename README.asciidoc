@@ -1,16 +1,29 @@
-
-image:https://img.shields.io/badge/License-MIT-brightgreen.svg["LICENSE", link="https://github.com/mmahmoodictbd/microservice-hello-world/blob/master/LICENSE"]
-
 # Production Ready Microservices Starter
 
 This is a microservice starter project, which give you all basic microservices, so that you can break down your 
 monolithic app easily.
 
+image:https://travis-ci.org/mmahmoodictbd/production-ready-microservices-starter.svg?branch=master["Build Status",
+link="https://travis-ci.org/mmahmoodictbd/production-ready-microservices-starter"]
+image:https://ci.appveyor.com/api/projects/status/l86attc8u56jgv0r?svg=true["Appveyor Status", link="https://ci.appveyor.com/project/mmahmoodictbd/production-ready-microservices-starter"]
+image:https://codecov.io/gh/mmahmoodictbd/production-ready-microservices-starter/branch/master/graph/badge.svg["Code Coverage", link="https://codecov.io/gh/mmahmoodictbd/production-ready-microservices-starter"]
+image:https://img.shields.io/github/license/mmahmoodictbd/production-ready-microservices-starter.svg["LICENSE", link="https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/LICENSE"]
+
+image:https://sonarcloud.io/api/project_badges/measure?project=mmahmoodictbd_production-ready-microservices-starter&metric=alert_status["Quality
+Gate", link="https://sonarcloud.io/dashboard?id=mmahmoodictbd_production-ready-microservices-starter"]
+image:https://sonarcloud.io/api/project_badges/measure?project=mmahmoodictbd_production-ready-microservices-starter&metric=bugs["Bugs",
+link="https://sonarcloud.io/dashboard?id=mmahmoodictbd_production-ready-microservices-starter"]
+image:https://sonarcloud.io/api/project_badges/measure?project=mmahmoodictbd_production-ready-microservices-starter&metric=code_smells["Code
+smells", link="https://sonarcloud.io/dashboard?id=mmahmoodictbd_production-ready-microservices-starter"]
+image:https://sonarcloud.io/api/project_badges/measure?project=mmahmoodictbd_production-ready-microservices-starter&metric=security_rating["Security rating", link="https://sonarcloud.io/dashboard?id=mmahmoodictbd_production-ready-microservices-starter"]
+image:https://sonarcloud.io/api/project_badges/measure?project=mmahmoodictbd_production-ready-microservices-starter&metric=sqale_rating["Maintainability", link="https://sonarcloud.io/dashboard?id=mmahmoodictbd_production-ready-microservices-starter"]
+
+
 ##### Basic microservices includes -
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/service-registry/README.asciidoc[Discovery Service] aka service registry
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/gateway/README.asciidoc[Gateway / Edge Service]
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/uaa/README.asciidoc[User Accounts and
-Authentication Service] (Work in progress)
+Authentication Service (UAA)] (Work in progress)
 
 ### Technologies
 * Java 8

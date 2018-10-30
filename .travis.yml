@@ -1,0 +1,9 @@
+language: java
+sudo: false
+script: mvn clean install
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
