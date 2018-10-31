@@ -1,11 +1,9 @@
-package com.chumbok.uaa.dto.request.response;
+package com.chumbok.uaa.dto.response;
 
-import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
-public class MeResponse {
+public class LoggedInUserInfoResponse {
 
     private String username;
     private String displayName;

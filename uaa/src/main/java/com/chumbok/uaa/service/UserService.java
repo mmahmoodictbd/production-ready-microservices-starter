@@ -36,18 +36,18 @@ import static com.chumbok.uaa.security.DefaultSecurityRoleConstants.ROLE_ADMIN;
 import static com.chumbok.uaa.security.DefaultSecurityRoleConstants.ROLE_SUPERADMIN;
 
 /**
- * The type User service.
+ * User service for both Admin and Super Admin.
  */
 @Service
 public class UserService {
-
-    private final UuidUtil uuidUtil;
-    private final SecurityUtil securityUtil;
 
     private final OrgRepository orgRepository;
     private final TenantRepository tenantRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+
+    private final UuidUtil uuidUtil;
+    private final SecurityUtil securityUtil;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
