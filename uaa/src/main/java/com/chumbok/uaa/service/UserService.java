@@ -66,22 +66,22 @@ public class UserService {
                        UserRepository userRepository, RoleRepository roleRepository,
                        UuidUtil uuidUtil, SecurityUtil securityUtil, BCryptPasswordEncoder bCryptPasswordEncoder) {
 
-        this.uuidUtil = uuidUtil;
-        this.securityUtil = securityUtil;
         this.orgRepository = orgRepository;
         this.tenantRepository = tenantRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.uuidUtil = uuidUtil;
+        this.securityUtil = securityUtil;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     /**
-     * Gets users.
+     * Gets user's page by super admin.
      *
      * @param orgId    the org id
      * @param tenantId the tenant id
      * @param pageable the pageable
-     * @return the users
+     * @return the users page
      */
     @Secured(ROLE_SUPERADMIN)
     @Transactional(readOnly = true)
@@ -90,10 +90,10 @@ public class UserService {
     }
 
     /**
-     * Gets users.
+     * Gets user's page by admin.
      *
      * @param pageable the pageable
-     * @return the users
+     * @return the users page
      */
     @Secured(ROLE_ADMIN)
     @Transactional(readOnly = true)
@@ -102,7 +102,7 @@ public class UserService {
     }
 
     /**
-     * Gets user.
+     * Gets user by super admin.
      *
      * @param orgId    the org id
      * @param tenantId the tenant id
@@ -116,7 +116,7 @@ public class UserService {
     }
 
     /**
-     * Gets user.
+     * Gets user by admin.
      *
      * @param id the id
      * @return the user
@@ -128,12 +128,12 @@ public class UserService {
     }
 
     /**
-     * Create identity response.
+     * Create User by super user.
      *
      * @param orgId             the org id
      * @param tenantId          the tenant id
      * @param userCreateRequest the user create request
-     * @return the identity response
+     * @return the user's id
      */
     @Secured(ROLE_SUPERADMIN)
     public IdentityResponse create(String orgId, String tenantId, UserCreateRequest userCreateRequest) {
@@ -152,10 +152,10 @@ public class UserService {
     }
 
     /**
-     * Create identity response.
+     * Create User by admin.
      *
      * @param userCreateRequest the user create request
-     * @return the identity response
+     * @return the user's id
      */
     @Secured(ROLE_ADMIN)
     public IdentityResponse create(UserCreateRequest userCreateRequest) {
@@ -172,49 +172,49 @@ public class UserService {
     }
 
     /**
-     * Update.
+     * Update User by super admin.
      *
      * @param orgId             the org id
      * @param tenantId          the tenant id
-     * @param id                the id
+     * @param userId                the user id
      * @param userUpdateRequest the user update request
      */
     @Secured(ROLE_SUPERADMIN)
-    public void update(String orgId, String tenantId, String id, UserUpdateRequest userUpdateRequest) {
-        updateUser(userUpdateRequest, userRepository.findByOrgIdAndTenantIdAndId(orgId, tenantId, id));
+    public void update(String orgId, String tenantId, String userId, UserUpdateRequest userUpdateRequest) {
+        updateUser(userUpdateRequest, userRepository.findByOrgIdAndTenantIdAndId(orgId, tenantId, userId));
     }
 
     /**
-     * Update.
+     * Update User by admin.
      *
-     * @param id                the id
+     * @param userId                the user id
      * @param userUpdateRequest the user update request
      */
     @Secured(ROLE_ADMIN)
-    public void update(String id, UserUpdateRequest userUpdateRequest) {
-        updateUser(userUpdateRequest, userRepository.findById(id));
+    public void update(String userId, UserUpdateRequest userUpdateRequest) {
+        updateUser(userUpdateRequest, userRepository.findById(userId));
     }
 
     /**
-     * Delete.
+     * Delete User by super admin.
      *
      * @param orgId    the org id
      * @param tenantId the tenant id
-     * @param id       the id
+     * @param userId       the user id
      */
     @Secured(ROLE_SUPERADMIN)
-    public void delete(String orgId, String tenantId, String id) {
-        deleteUser(id, userRepository.findByOrgIdAndTenantIdAndId(orgId, tenantId, id));
+    public void delete(String orgId, String tenantId, String userId) {
+        deleteUser(userId, userRepository.findByOrgIdAndTenantIdAndId(orgId, tenantId, userId));
     }
 
     /**
-     * Delete.
+     * Delete User by admin.
      *
-     * @param id the id
+     * @param userId the user id
      */
     @Secured(ROLE_ADMIN)
-    public void delete(String id) {
-        deleteUser(id, userRepository.findById(id));
+    public void delete(String userId) {
+        deleteUser(userId, userRepository.findById(userId));
     }
 
     private UsersResponse getUsersResponse(Page<User> userPage) {
@@ -239,6 +239,7 @@ public class UserService {
     }
 
     private UserResponse getUserResponse(Optional<User> userOptional) {
+
         if (!userOptional.isPresent()) {
             throw new ResourceNotFoundException("User not found.");
         }
