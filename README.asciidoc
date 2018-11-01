@@ -24,6 +24,12 @@ image:https://sonarcloud.io/api/project_badges/measure?project=mmahmoodictbd_pro
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/gateway/README.asciidoc[Gateway / Edge Service]
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/uaa/README.asciidoc[User Accounts and
 Authentication Service (UAA)] (Work in progress)
+* Notification Service (HTML, EMAIL and SMS) (Coming soon)
+* File Storage Service (Coming soon)
+* Contact Service (Coming soon)
+* Localization Service (Coming soon)
+* Audit Service (Coming soon)
+
 
 ### Technologies
 * Java 8
@@ -31,6 +37,7 @@ Authentication Service (UAA)] (Work in progress)
 * Spring Cloud
 * Spring Data JPA
 * Maven
+
 
 ### How to run
 
