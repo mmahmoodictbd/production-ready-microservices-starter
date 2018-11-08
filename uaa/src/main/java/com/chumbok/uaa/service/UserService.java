@@ -1,5 +1,8 @@
 package com.chumbok.uaa.service;
 
+import com.chumbok.exception.presentation.ResourceNotFoundException;
+import com.chumbok.exception.presentation.UnautherizedException;
+import com.chumbok.exception.presentation.ValidationException;
 import com.chumbok.security.util.SecurityUtil;
 import com.chumbok.testable.common.UuidUtil;
 import com.chumbok.uaa.domain.model.Org;
@@ -15,9 +18,6 @@ import com.chumbok.uaa.dto.request.UserUpdateRequest;
 import com.chumbok.uaa.dto.response.IdentityResponse;
 import com.chumbok.uaa.dto.response.UserResponse;
 import com.chumbok.uaa.dto.response.UsersResponse;
-import com.chumbok.uaa.exception.presentation.ResourceNotFoundException;
-import com.chumbok.uaa.exception.presentation.UnautherizedException;
-import com.chumbok.uaa.exception.presentation.ValidationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;

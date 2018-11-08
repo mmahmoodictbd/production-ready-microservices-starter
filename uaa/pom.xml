@@ -67,6 +67,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.chumbok</groupId>
+            <artifactId>chumbok-exception-handling-common</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
         </dependency>

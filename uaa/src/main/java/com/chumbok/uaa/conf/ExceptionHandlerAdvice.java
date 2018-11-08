@@ -1,8 +1,8 @@
 package com.chumbok.uaa.conf;
 
+import com.chumbok.exception.AbstractExceptionHandlerAdvice;
+import com.chumbok.exception.ErrorResponse;
 import com.chumbok.security.exception.AuthTokenConsumeException;
-import com.chumbok.uaa.exception.AbstractExceptionHandlerAdvice;
-import com.chumbok.uaa.exception.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

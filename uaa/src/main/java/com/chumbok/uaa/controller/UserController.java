@@ -1,10 +1,10 @@
 package com.chumbok.uaa.controller;
 
+import com.chumbok.exception.presentation.ValidationException;
 import com.chumbok.uaa.dto.request.UserCreateRequest;
 import com.chumbok.uaa.dto.response.IdentityResponse;
 import com.chumbok.uaa.dto.response.UserResponse;
 import com.chumbok.uaa.dto.response.UsersResponse;
-import com.chumbok.uaa.exception.presentation.ValidationException;
 import com.chumbok.uaa.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;

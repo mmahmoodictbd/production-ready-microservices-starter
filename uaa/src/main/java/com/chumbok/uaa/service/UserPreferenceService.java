@@ -1,11 +1,11 @@
 package com.chumbok.uaa.service;
 
+import com.chumbok.exception.presentation.UnautherizedException;
 import com.chumbok.security.util.SecurityUtil;
 import com.chumbok.security.util.SecurityUtil.AuthenticatedUser;
 import com.chumbok.uaa.domain.model.User;
 import com.chumbok.uaa.domain.repository.UserRepository;
 import com.chumbok.uaa.dto.response.LoggedInUserInfoResponse;
-import com.chumbok.uaa.exception.presentation.UnautherizedException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

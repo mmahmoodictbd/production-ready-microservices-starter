@@ -1,10 +1,10 @@
 package com.chumbok.uaa.controller;
 
+import com.chumbok.exception.presentation.ValidationException;
 import com.chumbok.uaa.dto.request.TenantCreateUpdateRequest;
 import com.chumbok.uaa.dto.response.IdentityResponse;
 import com.chumbok.uaa.dto.response.TenantResponse;
 import com.chumbok.uaa.dto.response.TenantsResponse;
-import com.chumbok.uaa.exception.presentation.ValidationException;
 import com.chumbok.uaa.service.TenantService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;

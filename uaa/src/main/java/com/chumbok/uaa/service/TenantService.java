@@ -1,5 +1,7 @@
 package com.chumbok.uaa.service;
 
+import com.chumbok.exception.presentation.ResourceNotFoundException;
+import com.chumbok.exception.presentation.ValidationException;
 import com.chumbok.testable.common.UuidUtil;
 import com.chumbok.uaa.domain.model.Org;
 import com.chumbok.uaa.domain.model.Tenant;
@@ -10,8 +12,6 @@ import com.chumbok.uaa.dto.request.TenantCreateUpdateRequest;
 import com.chumbok.uaa.dto.response.IdentityResponse;
 import com.chumbok.uaa.dto.response.TenantResponse;
 import com.chumbok.uaa.dto.response.TenantsResponse;
-import com.chumbok.uaa.exception.presentation.ResourceNotFoundException;
-import com.chumbok.uaa.exception.presentation.ValidationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
