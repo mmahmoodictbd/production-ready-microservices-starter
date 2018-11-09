@@ -38,6 +38,7 @@
         <module>gateway</module>
         <module>service-registry</module>
         <module>uaa</module>
+        <module>contact-service</module>
     </modules>
 
     <build>
