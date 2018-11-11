@@ -78,6 +78,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+  liquibase:
+    change-log: "classpath:/db/changelog/db.changelog-master.yml"
+    enabled: true
 
 eureka:
   client:
