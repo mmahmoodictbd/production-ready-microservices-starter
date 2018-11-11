@@ -38,7 +38,7 @@
         <dependency>
             <groupId>com.chumbok</groupId>
             <artifactId>chumbok-spring-boot-starter-data-jpa-multitenancy</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
         </dependency>
 
         <dependency>
@@ -59,9 +59,14 @@
         </dependency>
 
         <dependency>
-            <groupId>com.chumbok.exception</groupId>
+            <groupId>com.chumbok</groupId>
             <artifactId>chumbok-exception-handling-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
         </dependency>
 
         <dependency>
