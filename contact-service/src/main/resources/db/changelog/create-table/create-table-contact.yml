@@ -1,0 +1,149 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: create-contact-table
+      author: mahmood
+      changes:
+      - createTable:
+          tableName: contact
+          columns:
+          - column:
+              name: id
+              type: varchar(255)
+              constraints:
+                primaryKey: true
+                primaryKeyName: pk_contact
+                nullable: false
+          - column:
+              name: display_name
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: first_name
+              type: varchar(255)
+          - column:
+              name: last_name
+              type: varchar(255)
+          - column:
+              name: email1
+              type: varchar(255)
+          - column:
+              name: email2
+              type: varchar(255)
+          - column:
+              name: mobile1
+              type: varchar(255)
+          - column:
+              name: mobile2
+              type: varchar(255)
+          - column:
+              name: phone
+              type: varchar(255)
+          - column:
+              name: address_line1
+              type: varchar(255)
+          - column:
+              name: address_line2
+              type: varchar(255)
+          - column:
+              name: address_line3
+              type: varchar(255)
+          - column:
+              name: address_line4
+              type: varchar(255)
+          - column:
+              name: city
+              type: varchar(255)
+          - column:
+              name: zip
+              type: varchar(255)
+          - column:
+              name: birthday
+              type: date
+          - column:
+              name: image_url
+              type: varchar(255)
+          - column:
+              name: org
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: tenant
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: created_by
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: created_at
+              type: datetime(6)
+              constraints:
+                nullable: false
+          - column:
+              name: updated_by
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: updated_at
+              type: datetime(6)
+              constraints:
+                nullable: false
+
+      - addUniqueConstraint:
+          tableName: contact
+          columnNames: id, org, tenant
+          constraintName: UK_contact_id_org_tenant
+
+      - createIndex:
+          indexName: idx_contact_org_tenant_owner
+          tableName: contact
+          columns:
+          - column:
+              name: org
+              type: varchar(255)
+          - column:
+              name: tenant
+              type: varchar(255)
+          - column:
+              name: created_by
+              type: varchar(255)
+
+  - changeSet:
+      id: create-table-contact_additional_properties
+      author: mahmood
+      changes:
+      - createTable:
+          tableName: contact_additional_properties
+          columns:
+          - column:
+              name: contact_id
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: property_key
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: property_value
+              type: varchar(255)
+              constraints:
+                nullable: true
+      - createIndex:
+          indexName: idx_contact_contact_id_prop_key
+          tableName: contact_additional_properties
+          unique: true
+          columns:
+          - column:
+              name: contact_id
+              type: varchar(255)
+          - column:
+              name: property_key
+              type: varchar(255)
