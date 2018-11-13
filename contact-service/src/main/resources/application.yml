@@ -123,6 +123,10 @@ eureka:
     serviceUrl:
       defaultZone: http://service-registry:33000/eureka/
 
+com:
+  chumbok:
+    security:
+      token-signing-public-key-path: /root/keys/public_key.der
 
 ---
 

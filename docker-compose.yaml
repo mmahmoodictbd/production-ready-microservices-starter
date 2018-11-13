@@ -52,6 +52,23 @@ services:
       DATABASE_USER: app
       DATABASE_PASSWORD: app
 
+  contact-service:
+    build: "./contact-service"
+    restart: always
+    volumes:
+      - ~/.m2:/root/.m2
+      - ~/Desktop/key:/root/keys
+    ports:
+      - 33003:33003
+    expose:
+      - "33003"
+    depends_on:
+      - chumbok-mysql
+    environment:
+      DB_URL: jdbc:mysql://chumbok-mysql:3306/contact?createDatabaseIfNotExist=true
+      DATABASE_USER: app
+      DATABASE_PASSWORD: app
+
 volumes:
   mysqltest:
     driver: "local"
