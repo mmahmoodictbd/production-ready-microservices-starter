@@ -1,0 +1,168 @@
+### Common
+
+server:
+  port: 33004
+  tomcat:
+    max-threads: 4
+
+spring:
+  application:
+    name: NotificationService
+  profiles:
+    active: dev
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL55Dialect
+  resources:
+    add-mappings: false
+  mvc:
+    throw-exception-if-no-handler-found: true
+  liquibase:
+    change-log: "classpath:/db/changelog/db.changelog-master.yml"
+    enabled: true
+
+logging:
+  level:
+    root: INFO
+
+com:
+  chumbok:
+    security:
+      enable: true
+      token-signing-public-key-path: "classpath:dev-keys/public_key.der"
+      assert-org-with: Chumbok
+      assert-tenant: true
+      assert-tenant-with: Chumbok
+
+---
+
+### Dev profile
+
+spring:
+  profiles: dev
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  datasource:
+    url: ${DB_URL:jdbc:h2:mem:notification;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL}
+    username: sa
+    password:
+    driver-class: org.h2.Driver
+    jpa:
+      show-sql: true
+
+eureka:
+  client:
+    enabled: false
+
+logging:
+  level:
+    com.chumbok: DEBUG
+    org.springframework.security: DEBUG
+
+
+---
+
+### Prod profile
+
+spring:
+  profiles: prod
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/notification}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  liquibase:
+    change-log: "classpath:/db/changelog/db.changelog-master.yml"
+    enabled: true
+
+eureka:
+  client:
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:33000/eureka/
+
+logging:
+  level:
+    com.chumbok: DEBUG
+
+---
+
+### Integration test profile
+
+spring:
+  profiles: it
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  datasource:
+    url: ${DB_URL:jdbc:h2:mem:notification;DB_CLOSE_ON_EXIT=TRUE;MODE=MYSQL}
+    username: sa
+    password:
+    driver-class: org.h2.Driver
+    jpa:
+      show-sql: true
+
+
+---
+
+### Docker profile
+
+spring:
+  profiles: docker
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://service-registry:33000/eureka/
+
+com:
+  chumbok:
+    security:
+      token-signing-public-key-path: /root/keys/public_key.der
+
+---
+
+
+### MySQL profile
+
+spring:
+  profiles: mysql
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/notification?createDatabaseIfNotExist=true}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+
+---
+
+### Debug profile
+
+spring:
+  profiles: debug
+
+logging:
+  level:
+    org.hibernate:
+      SQL: DEBUG
+      type.descriptor.sql.BasicBinder: TRACE
+
+---
+
+### Enable Eureka profile
+
+spring:
+  profiles: eureka
+
+eureka:
+  client:
+    enabled: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:33000/eureka/
