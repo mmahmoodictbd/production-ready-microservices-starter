@@ -1,0 +1,110 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: create-table-notification
+      author: mahmood
+      changes:
+      - createTable:
+          tableName: notification
+          columns:
+          - column:
+              name: id
+              type: varchar(255)
+              constraints:
+                primaryKey: true
+                primaryKeyName: pk_notification
+                nullable: false
+          - column:
+                name: content
+                type: varchar(500)
+                constraints:
+                  nullable: false
+          - column:
+              name: type
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: org
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: tenant
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: created_by
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: created_at
+              type: datetime(6)
+              constraints:
+                nullable: false
+          - column:
+              name: updated_by
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: updated_at
+              type: datetime(6)
+              constraints:
+                nullable: false
+
+      - addUniqueConstraint:
+          tableName: notification
+          columnNames: id, org, tenant
+          constraintName: UK_notification_id_org_tenant
+
+      - createIndex:
+          indexName: idx_notification_org_tenant_owner
+          tableName: notification
+          columns:
+          - column:
+              name: org
+              type: varchar(255)
+          - column:
+              name: tenant
+              type: varchar(255)
+          - column:
+              name: created_by
+              type: varchar(255)
+
+  - changeSet:
+      id: create-table-notification_additional_properties
+      author: mahmood
+      changes:
+      - createTable:
+          tableName: notification_additional_properties
+          columns:
+          - column:
+              name: notification_id
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: property_key
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: property_value
+              type: varchar(255)
+              constraints:
+                nullable: true
+
+      - createIndex:
+          indexName: idx_notification_notification_id_prop_key
+          tableName: notification_additional_properties
+          unique: true
+          columns:
+          - column:
+              name: notification_id
+              type: varchar(255)
+          - column:
+              name: property_key
+              type: varchar(255)
