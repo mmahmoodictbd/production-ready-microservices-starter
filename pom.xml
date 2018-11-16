@@ -39,6 +39,7 @@
         <module>service-registry</module>
         <module>uaa</module>
         <module>contact-service</module>
+        <module>notification-service</module>
     </modules>
 
     <build>
