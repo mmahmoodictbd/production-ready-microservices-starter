@@ -1,7 +1,7 @@
 # Production Ready Microservices Starter
 
-This is a microservice starter project, which give you all basic microservices, so that you can break down your 
-monolithic app easily.
+_Production Ready Microservices Starter_ gonna give you basic microservices which are common in all businesses. Best
+thing is - all microservices are multitenant.
 
 image:https://travis-ci.org/mmahmoodictbd/production-ready-microservices-starter.svg?branch=master["Build Status",
 link="https://travis-ci.org/mmahmoodictbd/production-ready-microservices-starter"]
@@ -24,11 +24,12 @@ image:https://sonarcloud.io/api/project_badges/measure?project=mmahmoodictbd_pro
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/gateway/README.asciidoc[Gateway / Edge Service]
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/uaa/README.asciidoc[User Accounts and
 Authentication Service (UAA)] (Work in progress)
-* Notification Service (HTML, EMAIL and SMS) (Coming soon)
+* https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/notification-service/README.asciidoc[Notification Service] (HTML, EMAIL and SMS) (Work in progress)
 * File Storage Service (Coming soon)
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/contact-service/README.asciidoc[Contact Service] (Work in progress)
 * Localization Service (Coming soon)
 * Audit Service (Coming soon)
+* Blog Service (Coming soon)
 
 
 ### Technologies
