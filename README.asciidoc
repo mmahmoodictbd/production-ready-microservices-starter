@@ -30,7 +30,8 @@ Authentication Service (UAA)] (Work in progress)
 * Localization Service (Coming soon)
 * Audit Service (Coming soon)
 * Blog Service (Coming soon)
-
+* Messaging Service (Coming soon)
+* UI Menu Service (Coming soon)
 
 ### Technologies
 * Java 8
