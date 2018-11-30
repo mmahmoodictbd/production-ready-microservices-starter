@@ -15,16 +15,12 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class NotificationResponse {
+public class FileResponse {
 
     private String id;
-    private String content;
-    private Type type;
+    private String path;
+    private String originalName;
     private LocalDateTime createdAt;
     private Map<String, String> additionalProperties;
-
-    public enum Type {
-        SUCCESS, WARNING, ERROR, CRITICAL
-    }
 
 }

@@ -8,11 +8,11 @@ import java.util.List;
 
 @Data
 @Builder
-public class NotificationsResponse {
+public class FilesResponse {
 
     private int page;
     private int size;
     private int totalPages;
     private long totalElements;
-    private List<NotificationResponse> items;
+    private List<FileResponse> items;
 }

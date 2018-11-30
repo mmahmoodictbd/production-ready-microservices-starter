@@ -1,7 +1,11 @@
 package com.chumbok.filestorage.service;
 
 import com.chumbok.exception.presentation.ResourceNotFoundException;
+import com.chumbok.filestorage.domain.model.File;
+import com.chumbok.filestorage.domain.repository.FileRepository;
 import com.chumbok.filestorage.dto.response.IdentityResponse;
+import com.chumbok.filestorage.dto.response.FileResponse;
+import com.chumbok.filestorage.dto.response.FilesResponse;
 import com.chumbok.filestorage.exception.IORuntimeException;
 import com.chumbok.testable.common.DateUtil;
 import com.chumbok.testable.common.FileSystemUtil;
@@ -10,6 +14,8 @@ import com.chumbok.testable.common.SystemUtil;
 import com.chumbok.testable.common.UuidUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +23,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Load and save resources from file system.
@@ -36,6 +44,7 @@ public class FileSystemStorageService implements StorageService {
 
 
     private final ResourceLoader resourceLoader;
+    private final FileRepository fileRepository;
     private final DateUtil dateUtil;
     private final UuidUtil uuidUtil;
     private final SystemUtil systemUtil;
@@ -44,17 +53,49 @@ public class FileSystemStorageService implements StorageService {
 
 
     public FileSystemStorageService(ResourceLoader resourceLoader,
+                                    FileRepository fileRepository,
                                     DateUtil dateUtil,
                                     UuidUtil uuidUtil,
                                     SystemUtil systemUtil,
                                     FileSystemUtil fileSystemUtil,
                                     SlugUtil slugUtil) {
         this.resourceLoader = resourceLoader;
+        this.fileRepository = fileRepository;
         this.dateUtil = dateUtil;
         this.uuidUtil = uuidUtil;
         this.systemUtil = systemUtil;
         this.fileSystemUtil = fileSystemUtil;
         this.slugUtil = slugUtil;
+    }
+
+    public FilesResponse listByPage(Pageable pageable) {
+
+        Page<File> filePage = fileRepository.findAllByCreatedBy(pageable);
+
+        long totalElements = filePage.getTotalElements();
+        int totalPage = filePage.getTotalPages();
+        int size = filePage.getSize();
+        int page = filePage.getNumber();
+
+        List<FileResponse> fileResponseList = new ArrayList<>();
+        for (File file : filePage.getContent()) {
+            FileResponse fileResponse = new FileResponse();
+            fileResponse.setId(file.getId());
+            fileResponse.setPath(file.getPath());
+            fileResponse.setOriginalName(file.getOriginalName());
+            fileResponse.setCreatedAt(file.getCreatedAt());
+            fileResponse.setAdditionalProperties(file.getAdditionalProperties());
+            fileResponseList.add(fileResponse);
+        }
+
+        return FilesResponse.builder()
+                .items(fileResponseList)
+                .page(page)
+                .size(size)
+                .totalPages(totalPage)
+                .totalElements(totalElements)
+                .build();
+
     }
 
     /**
