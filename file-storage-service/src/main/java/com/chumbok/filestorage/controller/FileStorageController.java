@@ -1,10 +1,12 @@
 package com.chumbok.filestorage.controller;
 
+import com.chumbok.filestorage.dto.response.FilesResponse;
 import com.chumbok.filestorage.dto.response.IdentityResponse;
 import com.chumbok.filestorage.service.StorageService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,8 +27,29 @@ public class FileStorageController {
 
     private final StorageService storageService;
 
+    @GetMapping("/files")
+    public FilesResponse notificationPage(Pageable pageable) {
+        return storageService.listByPage(pageable);
+    }
+
     @GetMapping("/public/files/**")
     public ResponseEntity<Resource> downloadPublicFile(HttpServletRequest request) {
+        return getResourceResponseEntity(request);
+    }
+
+    @GetMapping("/files/**")
+    public ResponseEntity<Resource> downloadSecureFile(HttpServletRequest request) {
+        return getResourceResponseEntity(request);
+    }
+
+    @PostMapping("/files")
+    public ResponseEntity<IdentityResponse> uploadFile(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(name = "public", required = false) boolean publicFile) {
+        return new ResponseEntity<>(storageService.store(file), HttpStatus.CREATED);
+    }
+
+    private ResponseEntity<Resource> getResourceResponseEntity(HttpServletRequest request) {
 
         String url = request.getRequestURL().toString().split("/files/")[1];
         if (url == null || url.trim().length() == 0) {
@@ -52,16 +75,4 @@ public class FileStorageController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
     }
-
-    @GetMapping("/files/**")
-    public ResponseEntity<Resource> downloadSecureFile(HttpServletRequest request) {
-        // TODO: implement it.
-        throw new RuntimeException("Not implemented yet.");
-    }
-
-    @PostMapping("/files")
-    public ResponseEntity<IdentityResponse> uploadFile(@RequestParam("file") MultipartFile file) {
-        return new ResponseEntity<>(storageService.store(file), HttpStatus.CREATED);
-    }
-
 }
