@@ -40,6 +40,7 @@
         <module>uaa</module>
         <module>contact-service</module>
         <module>notification-service</module>
+        <module>file-storage-service</module>
     </modules>
 
     <build>
