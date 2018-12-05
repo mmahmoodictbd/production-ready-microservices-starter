@@ -86,6 +86,23 @@ services:
       DATABASE_USER: app
       DATABASE_PASSWORD: app
 
+  file-storage-service:
+    build: "./file-storage-service"
+    restart: always
+    volumes:
+      - ~/.m2:/root/.m2
+      - ~/Desktop/key:/root/keys
+    ports:
+      - 33005:33005
+    expose:
+      - "33005"
+    depends_on:
+      - chumbok-mysql
+    environment:
+      DB_URL: jdbc:mysql://chumbok-mysql:3306/filestorage?createDatabaseIfNotExist=true
+      DATABASE_USER: app
+      DATABASE_PASSWORD: app
+
 volumes:
   mysqltest:
     driver: "local"
