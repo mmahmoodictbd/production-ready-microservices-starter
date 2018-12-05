@@ -25,7 +25,7 @@ image:https://sonarcloud.io/api/project_badges/measure?project=mmahmoodictbd_pro
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/uaa/README.asciidoc[User Accounts and
 Authentication Service (UAA)] (Work in progress)
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/notification-service/README.asciidoc[Notification Service] (HTML, EMAIL and SMS) (Work in progress)
-* File Storage Service (Coming soon)
+* https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/file-storage-service/README.asciidoc[File Storage Service] (Store file and serve) (Work in progress)
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/contact-service/README.asciidoc[Contact Service] (Work in progress)
 * Localization Service (Coming soon)
 * Audit Service (Coming soon)
