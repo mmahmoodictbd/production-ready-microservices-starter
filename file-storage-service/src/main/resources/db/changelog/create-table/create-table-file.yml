@@ -1,0 +1,113 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: create-table-file
+      author: mahmood
+      changes:
+      - createTable:
+          tableName: file
+          columns:
+          - column:
+              name: id
+              type: varchar(255)
+              constraints:
+                primaryKey: true
+                primaryKeyName: pk_file
+                nullable: false
+          - column:
+                name: path
+                type: varchar(500)
+                constraints:
+                  nullable: false
+          - column:
+              name: original_name
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: secured
+              type: BOOLEAN
+          - column:
+              name: org
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: tenant
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: created_by
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: created_at
+              type: datetime(6)
+              constraints:
+                nullable: false
+          - column:
+              name: updated_by
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: updated_at
+              type: datetime(6)
+              constraints:
+                nullable: false
+
+      - addUniqueConstraint:
+          tableName: file
+          columnNames: id, org, tenant
+          constraintName: UK_file_id_org_tenant
+
+      - createIndex:
+          indexName: idx_file_org_tenant_owner
+          tableName: file
+          columns:
+          - column:
+              name: org
+              type: varchar(255)
+          - column:
+              name: tenant
+              type: varchar(255)
+          - column:
+              name: created_by
+              type: varchar(255)
+
+  - changeSet:
+      id: create-table-file_additional_properties
+      author: mahmood
+      changes:
+      - createTable:
+          tableName: file_additional_properties
+          columns:
+          - column:
+              name: file_id
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: property_key
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: property_value
+              type: varchar(255)
+              constraints:
+                nullable: true
+
+      - createIndex:
+          indexName: idx_file_file_id_prop_key
+          tableName: file_additional_properties
+          unique: true
+          columns:
+          - column:
+              name: file_id
+              type: varchar(255)
+          - column:
+              name: property_key
+              type: varchar(255)
