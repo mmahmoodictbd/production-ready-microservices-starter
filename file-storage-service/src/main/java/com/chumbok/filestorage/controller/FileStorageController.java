@@ -1,5 +1,6 @@
 package com.chumbok.filestorage.controller;
 
+import com.chumbok.filestorage.dto.request.StoreFileCreateRequest;
 import com.chumbok.filestorage.dto.response.FilesResponse;
 import com.chumbok.filestorage.dto.response.IdentityResponse;
 import com.chumbok.filestorage.service.StorageService;
@@ -27,9 +28,10 @@ public class FileStorageController {
 
     private final StorageService storageService;
 
+
     @GetMapping("/files")
-    public FilesResponse notificationPage(Pageable pageable) {
-        return storageService.listByPage(pageable);
+    public ResponseEntity<FilesResponse> notificationPage(Pageable pageable) {
+        return new ResponseEntity<>(storageService.listByPage(pageable), HttpStatus.OK);
     }
 
     @GetMapping("/public/files/**")
@@ -46,7 +48,9 @@ public class FileStorageController {
     public ResponseEntity<IdentityResponse> uploadFile(
             @RequestParam("file") MultipartFile file,
             @RequestParam(name = "public", required = false) boolean publicFile) {
-        return new ResponseEntity<>(storageService.store(file), HttpStatus.CREATED);
+
+        StoreFileCreateRequest request = StoreFileCreateRequest.builder().file(file).publicFile(publicFile).build();
+        return new ResponseEntity<>(storageService.store(request), HttpStatus.CREATED);
     }
 
     private ResponseEntity<Resource> getResourceResponseEntity(HttpServletRequest request) {
