@@ -1,10 +1,10 @@
 package com.chumbok.filestorage.service;
 
+import com.chumbok.filestorage.dto.request.StoreFileCreateRequest;
 import com.chumbok.filestorage.dto.response.FilesResponse;
 import com.chumbok.filestorage.dto.response.IdentityResponse;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface StorageService {
 
@@ -12,5 +12,5 @@ public interface StorageService {
 
     Resource loadFileAsResource(String url);
 
-    IdentityResponse store(MultipartFile file);
+    IdentityResponse store(StoreFileCreateRequest storeFileCreateRequest);
 }

@@ -1,12 +1,15 @@
 package com.chumbok.filestorage.service;
 
 import com.chumbok.exception.presentation.ResourceNotFoundException;
+import com.chumbok.exception.presentation.UnautherizedException;
 import com.chumbok.filestorage.domain.model.File;
 import com.chumbok.filestorage.domain.repository.FileRepository;
+import com.chumbok.filestorage.dto.request.StoreFileCreateRequest;
 import com.chumbok.filestorage.dto.response.IdentityResponse;
 import com.chumbok.filestorage.dto.response.FileResponse;
 import com.chumbok.filestorage.dto.response.FilesResponse;
 import com.chumbok.filestorage.exception.IORuntimeException;
+import com.chumbok.security.util.SecurityUtil;
 import com.chumbok.testable.common.DateUtil;
 import com.chumbok.testable.common.FileSystemUtil;
 import com.chumbok.testable.common.SlugUtil;
@@ -25,6 +28,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Load and save resources from file system.
@@ -50,6 +54,7 @@ public class FileSystemStorageService implements StorageService {
     private final SystemUtil systemUtil;
     private final FileSystemUtil fileSystemUtil;
     private final SlugUtil slugUtil;
+    private final SecurityUtil securityUtil;
 
 
     public FileSystemStorageService(ResourceLoader resourceLoader,
@@ -58,7 +63,8 @@ public class FileSystemStorageService implements StorageService {
                                     UuidUtil uuidUtil,
                                     SystemUtil systemUtil,
                                     FileSystemUtil fileSystemUtil,
-                                    SlugUtil slugUtil) {
+                                    SlugUtil slugUtil,
+                                    SecurityUtil securityUtil) {
         this.resourceLoader = resourceLoader;
         this.fileRepository = fileRepository;
         this.dateUtil = dateUtil;
@@ -66,11 +72,13 @@ public class FileSystemStorageService implements StorageService {
         this.systemUtil = systemUtil;
         this.fileSystemUtil = fileSystemUtil;
         this.slugUtil = slugUtil;
+        this.securityUtil = securityUtil;
     }
 
     public FilesResponse listByPage(Pageable pageable) {
 
-        Page<File> filePage = fileRepository.findAllByCreatedBy(pageable);
+        Optional<SecurityUtil.AuthenticatedUser> authenticatedUserOptional = securityUtil.getAuthenticatedUser();
+        Page<File> filePage = fileRepository.findAllByCreatedBy(pageable, authenticatedUserOptional.get().getUsername());
 
         long totalElements = filePage.getTotalElements();
         int totalPage = filePage.getTotalPages();
@@ -108,6 +116,20 @@ public class FileSystemStorageService implements StorageService {
     @Override
     public Resource loadFileAsResource(String url) {
 
+        Optional<File> file = fileRepository.findFileByPath(String.format("/%s/%s", FILES_DIR, url));
+        if (!file.isPresent()) {
+            throw new ResourceNotFoundException(String.format("Requested file [%s] not found", url));
+        }
+
+        if (file.get().isSecured()) {
+            Optional<SecurityUtil.AuthenticatedUser> authenticatedUserOptional = securityUtil.getAuthenticatedUser();
+
+            if (!authenticatedUserOptional.isPresent() ||
+                    !file.get().getCreatedBy().equals(authenticatedUserOptional.get().getUsername())) {
+                throw new UnautherizedException("File is not public.");
+            }
+        }
+
         String filePath = String.format("file:%s/%s/%s", systemUtil.getUserHome(), FILES_DIR, url);
 
         Resource resource = resourceLoader.getResource(filePath);
@@ -122,29 +144,39 @@ public class FileSystemStorageService implements StorageService {
     /**
      * Save resource to file system.
      *
-     * @param file a MultipartFile.
+     * @param storeFileCreateRequest a store file request.
      * @return identity object of newly created file.
      * @throws IORuntimeException when file can not be written in the file system.
      */
     @Override
-    public IdentityResponse store(MultipartFile file) {
+    public IdentityResponse store(StoreFileCreateRequest storeFileCreateRequest) {
+
+        MultipartFile uploadedFile = storeFileCreateRequest.getFile();
 
         Path uploadPath = Paths.get(String.format("%s/%s/%s", systemUtil.getUserHome(), FILES_DIR,
                 dateUtil.getCurrentYearMonthDateString()));
 
         createUploadDirectoryIfNotExist(uploadPath);
 
-        String newFileName = buildNewFilename(file.getOriginalFilename());
+        String newFileName = buildNewFilename(uploadedFile.getOriginalFilename());
 
         Path path = Paths.get(uploadPath.toString(), newFileName);
 
-        writeFileInFileSystem(path, readFileBytes(file));
+        writeFileInFileSystem(path, readFileBytes(uploadedFile));
 
-        return new IdentityResponse(String.format("%s/%s/%s",
-                FILE_URL_PREFIX,
-                dateUtil.getCurrentYearMonthDateString(),
-                newFileName)
-        );
+        String newFilePath = String.format("/%s/%s/%s",
+                FILE_URL_PREFIX, dateUtil.getCurrentYearMonthDateString(), newFileName);
+
+        File fileObj = new File();
+        fileObj.setId(uuidUtil.getUuid());
+        fileObj.setPath(newFilePath);
+        fileObj.setOriginalName(uploadedFile.getOriginalFilename());
+        fileObj.setSecured(!storeFileCreateRequest.isPublicFile());
+        fileObj.setAdditionalProperties(storeFileCreateRequest.getAdditionalProperties());
+        fileRepository.save(fileObj);
+
+        return new IdentityResponse(newFilePath);
+
     }
 
     private void createUploadDirectoryIfNotExist(Path uploadPath) {
