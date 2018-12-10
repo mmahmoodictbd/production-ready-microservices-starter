@@ -29,7 +29,7 @@ Authentication Service (UAA)] (Work in progress)
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/contact-service/README.asciidoc[Contact Service] (Work in progress)
 * Localization Service (Coming soon)
 * Audit Service (Coming soon)
-* Blog Service (Coming soon)
+* https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/blog-service/README.asciidoc[Blog Service] (Work in progress)
 * Messaging Service (Coming soon)
 * UI Menu Service (Coming soon)
 
