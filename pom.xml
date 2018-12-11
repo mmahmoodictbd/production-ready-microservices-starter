@@ -41,6 +41,7 @@
         <module>contact-service</module>
         <module>notification-service</module>
         <module>file-storage-service</module>
+        <module>blog-service</module>
     </modules>
 
     <build>
