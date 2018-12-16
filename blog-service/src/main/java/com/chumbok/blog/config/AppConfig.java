@@ -2,6 +2,7 @@ package com.chumbok.blog.config;
 
 import com.chumbok.security.util.SecurityUtil;
 import com.chumbok.testable.common.DateUtil;
+import com.chumbok.testable.common.SlugUtil;
 import com.chumbok.testable.common.UuidUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,5 +26,10 @@ public class AppConfig {
     @Bean
     public SecurityUtil securityUtil() {
         return new SecurityUtil();
+    }
+
+    @Bean
+    public SlugUtil slugUtil() {
+        return new SlugUtil();
     }
 }
