@@ -5,14 +5,25 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToOne;
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 @Setter
 @EqualsAndHashCode
 @Entity
 public class Category extends BaseEntity {
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Site site;
 
     @Column(unique = true)
     @Length(min = 1, max = 255)
@@ -26,4 +37,9 @@ public class Category extends BaseEntity {
     @Length(max = 255)
     private String parent;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "category_additional_properties", joinColumns = @JoinColumn(name = "category_id"))
+    @MapKeyColumn(name = "property_key")
+    @Column(name = "property_value")
+    private Map<String, String> additionalProperties = new HashMap<>();
 }
