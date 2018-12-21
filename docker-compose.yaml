@@ -103,6 +103,23 @@ services:
       DATABASE_USER: app
       DATABASE_PASSWORD: app
 
+  blog-service:
+    build: "./blog-service"
+    restart: always
+    volumes:
+      - ~/.m2:/root/.m2
+      - ~/Desktop/key:/root/keys
+    ports:
+      - 33006:33006
+    expose:
+      - "33006"
+    depends_on:
+      - chumbok-mysql
+    environment:
+      DB_URL: jdbc:mysql://chumbok-mysql:3306/blog?createDatabaseIfNotExist=true
+      DATABASE_USER: app
+      DATABASE_PASSWORD: app
+
 volumes:
   mysqltest:
     driver: "local"
