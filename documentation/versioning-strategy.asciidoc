@@ -1,0 +1,12 @@
+# Versioning Strategy
+
+This project follow http://semver.org[Semantic Versioning] to maintain an
+understandable backwards compatibility strategy.
+
+The version format is as follows:
+
+```
+<major>.<minor>.<patch>-<label>
+```
+
+

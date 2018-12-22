@@ -84,6 +84,13 @@ docker-compose up
 # If it works, that means requests are proxying through gateway.
 ```
 
+### Documentations
+
+* https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/documentation/versioning-strategy.asciidoc[Versioning Strategy]
+
+* https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/documentation/push-docker-image-dockerhub.asciidoc[Docker images]
+
+
 ### Copyright & License
 
 Licensed under the MIT License, see the link:LICENSE[LICENSE] file for details.

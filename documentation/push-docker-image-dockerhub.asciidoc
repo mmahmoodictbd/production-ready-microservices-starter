@@ -1,0 +1,26 @@
+# Docker Images
+
+Images can be found here - https://hub.docker.com/u/chumbok[Docker Hub]
+
+#### Push docker image to dockerhub
+
+Docker images will be in dockerhub using com.spotify:docker-maven-plugin maven plugin.
+
+Add server entry in ~/.m2/settings.xml, example:
+
+```
+<server>
+  <id>docker-hub</id>
+  <username>user</username>
+  <password>encpass</password>
+  <configuration>
+    <email>email</email>
+  </configuration>
+</server>
+
+```
+
+From project directory run:
+```
+mvn clean package docker:build -DpushImage
+```
