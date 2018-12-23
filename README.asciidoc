@@ -90,6 +90,7 @@ docker-compose up
 
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/documentation/push-docker-image-dockerhub.asciidoc[Docker images]
 
+* https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/deployment/deployment-strategies.asciidoc[Deployment Strategies (Work in progress)]
 
 ### Copyright & License
 
