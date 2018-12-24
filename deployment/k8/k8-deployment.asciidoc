@@ -1,2 +1,8 @@
 # Kubernetes Deployment
 
+#### Run with Kubernetes and Minikube
+* Install https://kubernetes.io/docs/tasks/kubectl/install/[kubectl], https://www.virtualbox.org/wiki/Downloads[VirtualBox], and https://github.com/kubernetes/minikube/releases[Minikube].
+* Start Minikube using `minikube start`.
+* To be able to work with the docker daemon, make sure Docker is running, then run the following command in your
+terminal: `eval $(minikube docker-env)`.
+
