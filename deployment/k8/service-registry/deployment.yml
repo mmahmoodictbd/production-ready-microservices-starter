@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-registry-deployment
+  labels:
+    app: service-registry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-registry
+  template:
+    metadata:
+      labels:
+        app: service-registry
+    spec:
+      containers:
+      - name: service-registry
+        image: chumbok/service-registry:latest
+        ports:
+        - containerPort: 33000
