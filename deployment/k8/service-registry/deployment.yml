@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: service-registry-deployment
+  name: service-registry
   labels:
     app: service-registry
 spec:
