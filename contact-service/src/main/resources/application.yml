@@ -121,7 +121,7 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://service-registry:33000/eureka/
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://service-registry:33000/eureka/}
 
 com:
   chumbok:
