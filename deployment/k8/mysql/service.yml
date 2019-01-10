@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: chumbok-mysql
+spec:
+  #type: NodePort
+  ports:
+  - port: 3306
+    #targetPort: 3306
+    #nodePort: 31000
+  selector:
+    app: chumbok-mysql
+  clusterIP: None
