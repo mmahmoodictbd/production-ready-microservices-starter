@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: chumbok-security-key-pv-claim
+spec:
+  accessModes:
+    - ReadOnlyMany
+  storageClassName: local-storage
+  resources:
+    requests:
+      storage: 1Gi
+#  volumeName: chumbok-security-key-persistent-storage
