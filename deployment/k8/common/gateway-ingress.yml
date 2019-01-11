@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: gateway-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  backend:
+    serviceName: default-http-backend
+    servicePort: 80
+  rules:
+  - http:
+      paths:
+      - path: /serviceregistry
+        backend:
+          serviceName: service-registry
+          servicePort: 33000
+      - path: /contactservice
+        backend:
+          serviceName: contact-service
+          servicePort: 33003
+
