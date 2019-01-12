@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: contact-service
+  labels:
+    app: contact-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: contact-service
+  template:
+    metadata:
+      labels:
+        app: contact-service
+    spec:
+      containers:
+      - name: contact-service
+        image: chumbok/contact-service:latest
+        ports:
+        - containerPort: 33003
+        env:
+        - name: DB_URL
+          value: jdbc:mysql://chumbok-mysql:3306/contact?createDatabaseIfNotExist=true
+        - name: DATABASE_USER
+          value: app
+        - name: DATABASE_PASSWORD
+          value: app
+        - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+          value: http://service-registry.default.svc.cluster.local:33000/eureka/
+        - name: EUREKA_INSTANSE_PREFER_IP_ADDRESS
+          value: 'true'
+        volumeMounts:
+        - name: chumbok-security-key-persistent-storage
+          mountPath: /root/keys
+      volumes:
+        - name: chumbok-security-key-persistent-storage
+          persistentVolumeClaim:
+            claimName: chumbok-security-key-pv-claim
+
+
