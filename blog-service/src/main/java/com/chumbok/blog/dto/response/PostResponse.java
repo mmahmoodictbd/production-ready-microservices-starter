@@ -9,7 +9,7 @@ import java.util.Map;
 @Builder
 public class PostResponse {
 
-    private Long id;
+    private String id;
 
     private String title;
 
