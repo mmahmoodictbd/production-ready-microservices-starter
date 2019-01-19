@@ -40,10 +40,10 @@ public class PostServiceImpl implements PostService {
 
         List<PostResponse> postResponseList = new ArrayList<>();
 
-        long totalElements;
-        int totalPage;
-        int size;
-        int page;
+        long totalElements = 0;
+        int totalPage = 0;
+        int size = 0;
+        int page = 0;
 
         if (status == null || status.trim().length() == 0 || "published".equalsIgnoreCase(status)) {
 
@@ -57,7 +57,7 @@ public class PostServiceImpl implements PostService {
             size = publishedPostsPage.getSize();
             page = publishedPostsPage.getNumber();
 
-        } else {
+        } else if ("draft".equalsIgnoreCase(status)) {
 
             Page<DraftPost> draftPostsPage = draftPostRepository.findAll(pageable);
             for (DraftPost post : draftPostsPage.getContent()) {
@@ -68,6 +68,7 @@ public class PostServiceImpl implements PostService {
             totalPage = draftPostsPage.getTotalPages();
             size = draftPostsPage.getSize();
             page = draftPostsPage.getNumber();
+
         }
 
         return PostsResponse.builder()
