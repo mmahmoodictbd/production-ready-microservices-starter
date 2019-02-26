@@ -88,7 +88,7 @@ com:
 spring:
   profiles: prod
   datasource:
-    url: ${DB_URL:jdbc:mysql://localhost:3306/uaa}
+    url: ${DB_URL:jdbc:mysql://localhost:3306/uaa?serverTimezone=UTC}
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:root}
   jpa:
@@ -113,7 +113,7 @@ logging:
 spring:
   profiles: mysql
   datasource:
-    url: ${DB_URL:jdbc:mysql://localhost:3306/uaa?createDatabaseIfNotExist=true}
+    url: ${DB_URL:jdbc:mysql://localhost:3306/uaa?createDatabaseIfNotExist=true&serverTimezone=UTC}
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:root}
 
