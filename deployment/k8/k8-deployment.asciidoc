@@ -4,5 +4,69 @@
 * Install https://kubernetes.io/docs/tasks/kubectl/install/[kubectl], https://www.virtualbox.org/wiki/Downloads[VirtualBox], and https://github.com/kubernetes/minikube/releases[Minikube].
 * Start Minikube using `minikube start`.
 * To be able to work with the docker daemon, make sure Docker is running, then run the following command in your
-terminal: `eval $(minikube docker-env)`.
+terminal: `minikube dashboard`.
+* `kubectl cluster-info`
+* `minikube dashboard`
+* `kubectl create -f deployment.yml`
+* `kubectl create -f service.yml`
+* `kubectl get pods`
+* `kubectl get services`
+*
 
+
+minikube start
+minikube stop
+minikube addons enable ingress
+
+kubectl delete deployment gateway
+kubectl delete deployment service-registry
+
+kubectl delete service gateway
+kubectl delete service service-registry
+
+
+kubectl create -f deployment/k8/gateway/deployment.yml
+kubectl create -f deployment/k8/service-registry/deployment.yml
+
+kubectl create -f deployment/k8/gateway/service.yml
+kubectl create -f deployment/k8/service-registry/service.yml
+
+
+kubectl delete ingress gateway-ingress
+kubectl create -f deployment/k8/common/gateway-ingress.yml
+
+
+
+
+kubectl delete persistentvolume mysql-pv-volume
+kubectl delete persistentvolumeclaim mysql-pv-claim
+kubectl delete secret mysql-secret
+kubectl delete service chumbok-mysql
+kubectl delete deployment chumbok-mysql
+
+
+kubectl create -f deployment/k8/mysql/persistent-volume.yml
+kubectl create -f deployment/k8/mysql/persistent-volume-claim.yml
+kubectl create -f deployment/k8/mysql/secret.yml
+kubectl create -f deployment/k8/mysql/deployment.yml
+kubectl create -f deployment/k8/mysql/service.yml
+
+
+
+kubectl create -f deployment/k8/common/local-storage.yml
+
+kubectl delete persistentvolume chumbok-security-key-persistent-storage
+kubectl delete persistentvolumeclaim chumbok-security-key-pv-claim
+kubectl create -f deployment/k8/common/persistent-volume-claim.yml
+kubectl create -f deployment/k8/common/persistent-volume.yml
+
+kubectl delete deployment contact-service
+kubectl delete service contact-service
+kubectl create -f deployment/k8/contact-service/deployment.yml
+kubectl create -f deployment/k8/contact-service/service.yml
+
+
+kubectl get svc --all-namespaces
+kubectl describe svc kubernetes
+
+minikube start --memory=2048 --vm-driver=xhyve
