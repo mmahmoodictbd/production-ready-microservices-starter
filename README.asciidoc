@@ -31,6 +31,7 @@ Authentication Service (UAA)] (Work in progress)
 * Audit Service (Coming soon)
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/blog-service/README.asciidoc[Blog Service] (Work in progress)
 * Messaging Service (Coming soon)
+* Approve Service (Coming soon)
 * UI Menu Service (Coming soon)
 
 ### Technologies
