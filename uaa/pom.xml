@@ -19,7 +19,6 @@
     <packaging>jar</packaging>
 
     <properties>
-
     </properties>
 
     <dependencies>
@@ -37,7 +36,6 @@
         <dependency>
             <groupId>com.chumbok</groupId>
             <artifactId>chumbok-spring-boot-starter-data-jpa-multitenancy</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <dependency>
@@ -63,13 +61,11 @@
         <dependency>
             <groupId>com.chumbok</groupId>
             <artifactId>chumbok-security</artifactId>
-            <version>4.1.1</version>
         </dependency>
 
         <dependency>
             <groupId>com.chumbok</groupId>
             <artifactId>chumbok-exception-handling-common</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <dependency>
@@ -96,7 +92,6 @@
         <dependency>
             <groupId>com.chumbok</groupId>
             <artifactId>testable-common</artifactId>
-            <version>1.1.1</version>
         </dependency>
 
         <!-- Test dependencies -->
@@ -113,10 +108,9 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- This will get hamcrest-core automatically -->
         <dependency>
             <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-library</artifactId>
+            <artifactId>hamcrest</artifactId>
             <scope>test</scope>
         </dependency>
 

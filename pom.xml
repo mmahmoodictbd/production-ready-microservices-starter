@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.chumbok</groupId>
         <artifactId>chumbok-starter-parent</artifactId>
-        <version>4.0.0</version>
+        <version>5.0.0</version>
     </parent>
 
     <groupId>com.chumbok</groupId>
@@ -32,6 +32,12 @@
             ${project.build.directory}/jacoco.exec,
             ${project.build.directory}/jacoco-it.exec
         </sonar.jacoco.reportPaths>
+
+        <chumbok-data-jpa-multitenancy.version>1.1.0</chumbok-data-jpa-multitenancy.version>
+        <chumbok-security.version>4.2.0</chumbok-security.version>
+        <chumbok-exception-handling-common.version>1.1.0</chumbok-exception-handling-common.version>
+        <testable-common.version>1.1.1</testable-common.version>
+        <chumbok-spring-boot-starter-security.version>2.1.0</chumbok-spring-boot-starter-security.version>
     </properties>
 
     <modules>
@@ -43,6 +49,50 @@
         <module>file-storage-service</module>
         <module>blog-service</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>com.chumbok</groupId>
+                <artifactId>chumbok-spring-boot-starter-data-jpa-multitenancy</artifactId>
+                <version>${chumbok-data-jpa-multitenancy.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.chumbok</groupId>
+                <artifactId>chumbok-security</artifactId>
+                <version>${chumbok-security.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.chumbok</groupId>
+                <artifactId>chumbok-exception-handling-common</artifactId>
+                <version>${chumbok-exception-handling-common.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.chumbok</groupId>
+                <artifactId>testable-common</artifactId>
+                <version>${testable-common.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.chumbok</groupId>
+                <artifactId>chumbok-spring-boot-starter-security</artifactId>
+                <version>${chumbok-spring-boot-starter-security.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <optional>true</optional>
+                <version>1.16.20</version>
+                <scope>provided</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
