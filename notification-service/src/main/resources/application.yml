@@ -109,7 +109,8 @@ spring:
     driver-class: org.h2.Driver
     jpa:
       show-sql: true
-
+  main:
+    allow-bean-definition-overriding: true
 
 ---
 
