@@ -1,7 +1,7 @@
 # Production Ready Microservices Starter
 
-_Production Ready Microservices Starter_ gonna give you basic microservices which are common in all businesses. Best
-thing is - all microservices are multitenant.
+Build your business microservices with _Production Ready Microservices Starter_.
+
 
 image:https://travis-ci.org/mmahmoodictbd/production-ready-microservices-starter.svg?branch=master["Build Status",
 link="https://travis-ci.org/mmahmoodictbd/production-ready-microservices-starter"]
@@ -19,79 +19,74 @@ image:https://sonarcloud.io/api/project_badges/measure?project=mmahmoodictbd_pro
 image:https://sonarcloud.io/api/project_badges/measure?project=mmahmoodictbd_production-ready-microservices-starter&metric=sqale_rating["Maintainability", link="https://sonarcloud.io/dashboard?id=mmahmoodictbd_production-ready-microservices-starter"]
 
 
+##### Motivation
+
+* Every time I want to build some application, I need to copy features / APIs from older application.
+* Exposed as APIs, no more repeat feature.
+* Easy to update dependency versions and fix bugs.
+
+
+##### Key Features
+
+* REST APIs.
+* Single schema multi-tenancy.
+* Spring stack.
+* Followed micoservice best practices.
+
+
 ##### Basic microservices includes -
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/service-registry/README.asciidoc[Discovery Service] aka service registry
+
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/gateway/README.asciidoc[Gateway / Edge Service]
+
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/uaa/README.asciidoc[User Accounts and
 Authentication Service (UAA)] (Work in progress)
-* https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/notification-service/README.asciidoc[Notification Service] (HTML, EMAIL and SMS) (Work in progress)
-* https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/file-storage-service/README.asciidoc[File Storage Service] (Store file and serve) (Work in progress)
+  - Manage users with tenant and org concept.
+  - JWT Authentication.
+
+* https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/notification-service/README.asciidoc[Notification Service] (Work in progress)
+  - HTML
+  - Email
+  - SMS
+  - Push
+
+* https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/file-storage-service/README.asciidoc[File Storage Service] (Work in progress)
+  - Store file and serve
+
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/contact-service/README.asciidoc[Contact Service] (Work in progress)
+
 * Localization Service (Coming soon)
+
 * Audit Service (Coming soon)
+
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/blog-service/README.asciidoc[Blog Service] (Work in progress)
-* Messaging Service (Coming soon)
+
+* Messaging / Chat Service (Coming soon)
+
 * Approve Service (Coming soon)
+
 * UI Menu Service (Coming soon)
 
+
 ### Technologies
-* Java 8
-* Spring Boot
-* Spring Cloud
-* Spring Data JPA
-* Maven
 
+`Java 8`, `Spring Boot`, `Spring Cloud`, `Spring Data JPA`, `REST APIs`, `Maven`, `Liquibase`, `Kubernetes`
 
-### How to run
-
-```
-# Build all modules
-mvn clean install
-```
-
-```
-# Run service registry
-cd service-registry
-mvn spring-boot:run
-```
-
-```
-# Run gateway
-cd gateway
-mvn spring-boot:run
-# Go to http://localhost:33000/
-# Gateway service should be registered in eureka.
-```
-
-```
-# Run UAA
-cd uaa
-mvn spring-boot:run
-# Go to http://localhost:33000/
-# UAA should be registered in eureka.
-```
-
-### Run in Docker
-
-```
-# Install docker and docker-compose first.
-mvn clean package
-docker-compose build
-docker-compose up
-# Go to http://localhost:33000/
-# Gateway service and UAA should be registered in eureka.
-# In browser, try http://localhost:33001/uaa/ping
-# You supposed to get HTTP status 204.
-# If it works, that means requests are proxying through gateway.
-```
 
 ### Documentations
 
+* https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/documentation/how-to-run-local-machine.asciidoc[How to run in local machine]
+
+* https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/documentation/how-to-run-docker.asciidoc[How to run in Docker / Docker Compose]
+
+* https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/documentation/how-to-run-tests.asciidoc[How to run tests]
+
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/documentation/versioning-strategy.asciidoc[Versioning Strategy]
 
-* https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/documentation/push-docker-image-dockerhub.asciidoc[Docker images]
+* https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/documentation/push-docker-image-dockerhub.asciidoc[How to build and push Docker images]
 
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/deployment/deployment-strategies.asciidoc[Deployment Strategies (Kubernetes, PCF and bare metal) (Work in progress)]
+
 
 ### Copyright & License
 

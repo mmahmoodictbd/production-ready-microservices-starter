@@ -6,8 +6,8 @@
 
     <parent>
         <groupId>com.chumbok</groupId>
-        <artifactId>chumbok-starter-parent</artifactId>
-        <version>3.0.0</version>
+        <artifactId>microservices-starter</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
     </parent>
 
     <name>Contact Service</name>
@@ -38,7 +38,6 @@
         <dependency>
             <groupId>com.chumbok</groupId>
             <artifactId>chumbok-spring-boot-starter-data-jpa-multitenancy</artifactId>
-            <version>1.0.1</version>
         </dependency>
 
         <dependency>
@@ -49,19 +48,16 @@
         <dependency>
             <groupId>com.chumbok</groupId>
             <artifactId>chumbok-spring-boot-starter-security</artifactId>
-            <version>1.0.3</version>
         </dependency>
 
         <dependency>
             <groupId>com.chumbok</groupId>
             <artifactId>testable-common</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <dependency>
             <groupId>com.chumbok</groupId>
             <artifactId>chumbok-exception-handling-common</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <dependency>
