@@ -1,0 +1,40 @@
+# How to run tests
+
+
+### How to run unit tests
+
+To run the unit tests, execute the following commands
+
+```
+mvn clean test-compile test
+```
+
+
+### How to run integration tests
+
+To run the integration tests, execute the following commands
+
+```
+mvn clean test-compile verify -DskipTests=true
+```
+
+
+### How to run both unit tests and integration tests
+
+To run the integration tests, execute the following commands
+
+```
+mvn clean test-compile verify
+```
+
+
+### How to run pitest
+
+To run the mutation tests, execute the following commands
+
+```
+mvn clean test-compile test
+mvn org.pitest:pitest-maven:mutationCoverage
+```
+
+

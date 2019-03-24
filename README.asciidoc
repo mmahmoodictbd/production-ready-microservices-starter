@@ -49,23 +49,36 @@ Authentication Service (UAA)] (Work in progress)
   - Email
   - SMS
   - Push
+  - Mobile push notification with Firebase.
 
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/file-storage-service/README.asciidoc[File Storage Service] (Work in progress)
-  - Store file and serve
+  - Store files and serve.
+  - Store public and private files.
+  - Access files with share-only link.
 
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/contact-service/README.asciidoc[Contact Service] (Work in progress)
+  - Generic contacts feature.
+  - Share contacts within the company (Org).
 
 * Localization Service (Coming soon)
+  - UI labels and messages in preferred language.
 
 * Audit Service (Coming soon)
+  - Log important changes.
 
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/blog-service/README.asciidoc[Blog Service] (Work in progress)
+  - Create, fetch and list post.
+  - Manage site info.
 
 * Messaging / Chat Service (Coming soon)
+  - Chat between users of the system.
+  - Social media chat integration.
 
 * Approve Service (Coming soon)
+  - Manage processes with multi level approval.
 
 * UI Menu Service (Coming soon)
+  - Build menu items based on user access permission.
 
 
 ### Technologies
