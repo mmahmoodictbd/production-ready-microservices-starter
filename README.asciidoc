@@ -19,14 +19,14 @@ image:https://sonarcloud.io/api/project_badges/measure?project=mmahmoodictbd_pro
 image:https://sonarcloud.io/api/project_badges/measure?project=mmahmoodictbd_production-ready-microservices-starter&metric=sqale_rating["Maintainability", link="https://sonarcloud.io/dashboard?id=mmahmoodictbd_production-ready-microservices-starter"]
 
 
-##### Motivation
+### Motivation
 
 * Every time I want to build some application, I need to copy features / APIs from older application.
 * Exposed as APIs, no more repeat feature.
 * Easy to update dependency versions and fix bugs.
 
 
-##### Key Features
+### Key Features
 
 * REST APIs.
 * Single schema multi-tenancy.
@@ -34,7 +34,8 @@ image:https://sonarcloud.io/api/project_badges/measure?project=mmahmoodictbd_pro
 * Followed micoservice best practices.
 
 
-##### Basic microservices includes -
+### Basic microservices includes -
+
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/service-registry/README.asciidoc[Discovery Service] aka service registry
 
 * https://github.com/mmahmoodictbd/production-ready-microservices-starter/blob/master/gateway/README.asciidoc[Gateway / Edge Service]
@@ -79,6 +80,13 @@ Authentication Service (UAA)] (Work in progress)
 
 * UI Menu Service (Coming soon)
   - Build menu items based on user access permission.
+
+
+### Quick Deploy
+```
+mkdir production-ready-microservices-starter && cd $_
+bash <(curl -sSL https://raw.githubusercontent.com/mmahmoodictbd/production-ready-microservices-starter/master/init.sh)
+```
 
 
 ### Technologies

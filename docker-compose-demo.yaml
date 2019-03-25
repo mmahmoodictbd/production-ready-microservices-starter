@@ -1,0 +1,116 @@
+version: '3'
+
+services:
+
+  chumbok-mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "uaa"
+      MYSQL_USER: "app"
+      MYSQL_PASSWORD: "app"
+    volumes:
+      - demo_mysql:/var/lib/mysql
+    restart: always
+
+  service-registry:
+    image: chumbok/service-registry:latest
+    restart: always
+    ports:
+      - 33000:33000
+    expose:
+      - "33000"
+
+  gateway:
+    image: chumbok/gateway:latest
+    restart: always
+    ports:
+      - 33001:33001
+    expose:
+      - "33001"
+
+  uaa:
+    image: chumbok/uaa:latest
+    restart: always
+    volumes:
+      - public_key.der:/root/keys/public_key.der
+    ports:
+      - 33002:33002
+    expose:
+      - "33002"
+    depends_on:
+      - chumbok-mysql
+    environment:
+      DB_URL: jdbc:mysql://chumbok-mysql:3306/uaa?createDatabaseIfNotExist=true
+      DATABASE_USER: app
+      DATABASE_PASSWORD: app
+
+  contact-service:
+    image: chumbok/contact-service:latest
+    restart: always
+    volumes:
+      - public_key.der:/root/keys/public_key.der
+    ports:
+      - 33003:33003
+    expose:
+      - "33003"
+    depends_on:
+      - chumbok-mysql
+    environment:
+      DB_URL: jdbc:mysql://chumbok-mysql:3306/contact?createDatabaseIfNotExist=true
+      DATABASE_USER: app
+      DATABASE_PASSWORD: app
+
+  notification-service:
+    image: chumbok/notification-service:latest
+    restart: always
+    volumes:
+      - public_key.der:/root/keys/public_key.der
+    ports:
+      - 33004:33004
+    expose:
+      - "33004"
+    depends_on:
+      - chumbok-mysql
+    environment:
+      DB_URL: jdbc:mysql://chumbok-mysql:3306/notification?createDatabaseIfNotExist=true
+      DATABASE_USER: app
+      DATABASE_PASSWORD: app
+
+  file-storage-service:
+    image: chumbok/file-storage-service:latest
+    restart: always
+    volumes:
+      - public_key.der:/root/keys/public_key.der
+    ports:
+      - 33005:33005
+    expose:
+      - "33005"
+    depends_on:
+      - chumbok-mysql
+    environment:
+      DB_URL: jdbc:mysql://chumbok-mysql:3306/filestorage?createDatabaseIfNotExist=true
+      DATABASE_USER: app
+      DATABASE_PASSWORD: app
+
+  blog-service:
+    image: chumbok/blog-service:latest
+    restart: always
+    volumes:
+      - public_key.der:/root/keys/public_key.der
+    ports:
+      - 33006:33006
+    expose:
+      - "33006"
+    depends_on:
+      - chumbok-mysql
+    environment:
+      DB_URL: jdbc:mysql://chumbok-mysql:3306/blog?createDatabaseIfNotExist=true
+      DATABASE_USER: app
+      DATABASE_PASSWORD: app
+
+volumes:
+  demo_mysql:
+    driver: "local"
