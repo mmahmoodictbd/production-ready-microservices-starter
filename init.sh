@@ -32,7 +32,7 @@ fi
 
 curl -sSLO https://raw.githubusercontent.com/mmahmoodictbd/production-ready-microservices-starter/master/deployment/dev-keys/public_key.der
 
-curl -sSLO https://raw.githubusercontent.com/mmahmoodictbd/production-ready-microservices-starter/master/docker-compose-demo.yml
+curl -sSLO https://raw.githubusercontent.com/mmahmoodictbd/production-ready-microservices-starter/master/docker-compose-demo.yaml
 
 echo "You're all set! "
 echo "Run 'docker-compose -f docker-compose-demo.yml up -d' then go to http://localhost:33000 on your browser."
