@@ -35,7 +35,7 @@ services:
     image: chumbok/uaa:latest
     restart: always
     volumes:
-      - public_key.der:/root/keys/public_key.der
+      - ./public_key.der:/root/keys/public_key.der
     ports:
       - 33002:33002
     expose:
@@ -51,7 +51,7 @@ services:
     image: chumbok/contact-service:latest
     restart: always
     volumes:
-      - public_key.der:/root/keys/public_key.der
+      - ./public_key.der:/root/keys/public_key.der
     ports:
       - 33003:33003
     expose:
@@ -67,7 +67,7 @@ services:
     image: chumbok/notification-service:latest
     restart: always
     volumes:
-      - public_key.der:/root/keys/public_key.der
+      - ./public_key.der:/root/keys/public_key.der
     ports:
       - 33004:33004
     expose:
@@ -83,7 +83,7 @@ services:
     image: chumbok/file-storage-service:latest
     restart: always
     volumes:
-      - public_key.der:/root/keys/public_key.der
+      - ./public_key.der:/root/keys/public_key.der
     ports:
       - 33005:33005
     expose:
@@ -99,7 +99,7 @@ services:
     image: chumbok/blog-service:latest
     restart: always
     volumes:
-      - public_key.der:/root/keys/public_key.der
+      - ./public_key.der:/root/keys/public_key.der
     ports:
       - 33006:33006
     expose:

@@ -35,4 +35,4 @@ curl -sSLO https://raw.githubusercontent.com/mmahmoodictbd/production-ready-micr
 curl -sSLO https://raw.githubusercontent.com/mmahmoodictbd/production-ready-microservices-starter/master/docker-compose-demo.yaml
 
 echo "You're all set! "
-echo "Run 'docker-compose -f docker-compose-demo.yml up -d' then go to http://localhost:33000 on your browser."
+echo "Run 'docker-compose -f docker-compose-demo.yaml up -d' then go to http://localhost:33000 on your browser."
