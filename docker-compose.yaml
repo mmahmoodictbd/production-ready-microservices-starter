@@ -40,7 +40,7 @@ services:
     restart: always
     volumes:
       - ~/.m2:/root/.m2
-      - ~/Desktop/key:/root/keys
+      - ./deployment/dev-keys:/root/keys
     ports:
       - 33002:33002
     expose:
@@ -57,7 +57,7 @@ services:
     restart: always
     volumes:
       - ~/.m2:/root/.m2
-      - ~/Desktop/key:/root/keys
+      - ./deployment/dev-keys:/root/keys
     ports:
       - 33003:33003
     expose:
@@ -74,7 +74,7 @@ services:
     restart: always
     volumes:
       - ~/.m2:/root/.m2
-      - ~/Desktop/key:/root/keys
+      - ./deployment/dev-keys:/root/keys
     ports:
       - 33004:33004
     expose:
@@ -91,7 +91,7 @@ services:
     restart: always
     volumes:
       - ~/.m2:/root/.m2
-      - ~/Desktop/key:/root/keys
+      - ./deployment/dev-keys:/root/keys
     ports:
       - 33005:33005
     expose:
@@ -108,7 +108,7 @@ services:
     restart: always
     volumes:
       - ~/.m2:/root/.m2
-      - ~/Desktop/key:/root/keys
+      - ./deployment/dev-keys:/root/keys
     ports:
       - 33006:33006
     expose:
