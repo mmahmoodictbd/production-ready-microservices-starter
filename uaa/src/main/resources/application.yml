@@ -77,9 +77,9 @@ com:
   chumbok:
     uaa:
       jwt:
-        token-signing-private-key-path: /Users/mossaddeque/Desktop/key/private_key.der
+        token-signing-private-key-path: "classpath:dev-keys/private_key.der"
     auth:
-      token-signing-public-key-path: /Users/mossaddeque/Desktop/key/public_key.der
+      token-signing-public-key-path: "classpath:dev-keys/public_key.der"
 
 ---
 
