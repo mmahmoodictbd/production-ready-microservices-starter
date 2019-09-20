@@ -31,8 +31,8 @@ databaseChangeLog:
 
       - addUniqueConstraint:
           tableName: user_roles
-          columnNames: org_id, tenant_id, user_id, roles_id
-          constraintName: UK_user_roles_org_id_tenant_id_user_id_roles_id
+          columnNames: tenant_id, user_id, roles_id
+          constraintName: UK_user_roles_tenant_id_user_id_roles_id
 
       - createIndex:
           indexName: idx_user_roles_org_id
