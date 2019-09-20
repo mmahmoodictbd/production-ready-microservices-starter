@@ -13,11 +13,13 @@ import com.chumbok.uaa.domain.repository.OrgRepository;
 import com.chumbok.uaa.domain.repository.RoleRepository;
 import com.chumbok.uaa.domain.repository.TenantRepository;
 import com.chumbok.uaa.domain.repository.UserRepository;
+import com.chumbok.uaa.dto.request.PublicUserCreateRequest;
 import com.chumbok.uaa.dto.request.UserCreateRequest;
 import com.chumbok.uaa.dto.request.UserUpdateRequest;
 import com.chumbok.uaa.dto.response.IdentityResponse;
 import com.chumbok.uaa.dto.response.UserResponse;
 import com.chumbok.uaa.dto.response.UsersResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +42,7 @@ import static com.chumbok.uaa.security.DefaultSecurityRoleConstants.ROLE_SUPERAD
  * User service for both Admin and Super Admin.
  */
 @Service
+@AllArgsConstructor
 public class UserService {
 
     private final OrgRepository orgRepository;
@@ -52,30 +56,6 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
-     * Instantiates a new User service.
-     *
-     * @param orgRepository         the org repository
-     * @param tenantRepository      the tenant repository
-     * @param userRepository        the user repository
-     * @param roleRepository        the role repository
-     * @param uuidUtil              the uuid util
-     * @param securityUtil          the security util
-     * @param bCryptPasswordEncoder the b crypt password encoder
-     */
-    public UserService(OrgRepository orgRepository, TenantRepository tenantRepository,
-                       UserRepository userRepository, RoleRepository roleRepository,
-                       UuidUtil uuidUtil, SecurityUtil securityUtil, BCryptPasswordEncoder bCryptPasswordEncoder) {
-
-        this.orgRepository = orgRepository;
-        this.tenantRepository = tenantRepository;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.uuidUtil = uuidUtil;
-        this.securityUtil = securityUtil;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
-
-    /**
      * Gets user's page by super admin.
      *
      * @param orgId    the org id
@@ -87,6 +67,43 @@ public class UserService {
     @Transactional(readOnly = true)
     public UsersResponse getUsers(String orgId, String tenantId, Pageable pageable) {
         return getUsersResponse(userRepository.findAllByOrgIdAndTenantId(orgId, tenantId, pageable));
+    }
+
+    private UsersResponse getUsersResponse(Page<User> userPage) {
+
+        long totalElements = userPage.getTotalElements();
+        int totalPage = userPage.getTotalPages();
+        int size = userPage.getSize();
+        int page = userPage.getNumber();
+
+        List<UserResponse> userResponseList = new ArrayList<>();
+        for (User user : userPage.getContent()) {
+            userResponseList.add(buildUserResponse(user));
+        }
+
+        return UsersResponse.builder()
+                .items(userResponseList)
+                .page(page)
+                .size(size)
+                .totalPages(totalPage)
+                .totalElements(totalElements)
+                .build();
+    }
+
+    private UserResponse buildUserResponse(User user) {
+
+        return UserResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .displayName(user.getDisplayName())
+                .imageUrl(user.getImageUrl())
+                .timezoneId(user.getTimezoneId())
+                .preferredLanguage(user.getPreferredLanguage())
+                .roles(user.getRoles().stream().map(role -> role.getRole()).collect(Collectors.toSet()))
+                .enabled(user.isEnabled())
+                .build();
     }
 
     /**
@@ -113,6 +130,15 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponse getUser(String orgId, String tenantId, String id) {
         return getUserResponse(userRepository.findByOrgIdAndTenantIdAndId(orgId, tenantId, id));
+    }
+
+    private UserResponse getUserResponse(Optional<User> userOptional) {
+
+        if (!userOptional.isPresent()) {
+            throw new ResourceNotFoundException("User not found.");
+        }
+
+        return buildUserResponse(userOptional.get());
     }
 
     /**
@@ -151,102 +177,6 @@ public class UserService {
         return getIdentityResponse(userCreateRequest, orgOptional.get(), tenantOptional.get());
     }
 
-    /**
-     * Create User by admin.
-     *
-     * @param userCreateRequest the user create request
-     * @return the user's id
-     */
-    @Secured(ROLE_ADMIN)
-    public IdentityResponse create(UserCreateRequest userCreateRequest) {
-
-        Optional<SecurityUtil.AuthenticatedUser> authenticatedUser = securityUtil.getAuthenticatedUser();
-        if (!authenticatedUser.isPresent()) {
-            throw new UnautherizedException("User not authenticated.");
-        }
-
-        Org org = orgRepository.getOne(authenticatedUser.get().getOrg());
-        Tenant tenant = tenantRepository.getOne(authenticatedUser.get().getTenant());
-
-        return getIdentityResponse(userCreateRequest, org, tenant);
-    }
-
-    /**
-     * Update User by super admin.
-     *
-     * @param orgId             the org id
-     * @param tenantId          the tenant id
-     * @param userId                the user id
-     * @param userUpdateRequest the user update request
-     */
-    @Secured(ROLE_SUPERADMIN)
-    public void update(String orgId, String tenantId, String userId, UserUpdateRequest userUpdateRequest) {
-        updateUser(userUpdateRequest, userRepository.findByOrgIdAndTenantIdAndId(orgId, tenantId, userId));
-    }
-
-    /**
-     * Update User by admin.
-     *
-     * @param userId                the user id
-     * @param userUpdateRequest the user update request
-     */
-    @Secured(ROLE_ADMIN)
-    public void update(String userId, UserUpdateRequest userUpdateRequest) {
-        updateUser(userUpdateRequest, userRepository.findById(userId));
-    }
-
-    /**
-     * Delete User by super admin.
-     *
-     * @param orgId    the org id
-     * @param tenantId the tenant id
-     * @param userId       the user id
-     */
-    @Secured(ROLE_SUPERADMIN)
-    public void delete(String orgId, String tenantId, String userId) {
-        deleteUser(userId, userRepository.findByOrgIdAndTenantIdAndId(orgId, tenantId, userId));
-    }
-
-    /**
-     * Delete User by admin.
-     *
-     * @param userId the user id
-     */
-    @Secured(ROLE_ADMIN)
-    public void delete(String userId) {
-        deleteUser(userId, userRepository.findById(userId));
-    }
-
-    private UsersResponse getUsersResponse(Page<User> userPage) {
-
-        long totalElements = userPage.getTotalElements();
-        int totalPage = userPage.getTotalPages();
-        int size = userPage.getSize();
-        int page = userPage.getNumber();
-
-        List<UserResponse> userResponseList = new ArrayList<>();
-        for (User user : userPage.getContent()) {
-            userResponseList.add(buildUserResponse(user));
-        }
-
-        return UsersResponse.builder()
-                .items(userResponseList)
-                .page(page)
-                .size(size)
-                .totalPages(totalPage)
-                .totalElements(totalElements)
-                .build();
-    }
-
-    private UserResponse getUserResponse(Optional<User> userOptional) {
-
-        if (!userOptional.isPresent()) {
-            throw new ResourceNotFoundException("User not found.");
-        }
-
-        return buildUserResponse(userOptional.get());
-    }
-
     private IdentityResponse getIdentityResponse(UserCreateRequest userCreateRequest, Org org, Tenant tenant) {
 
         boolean isExist = userRepository.isExist(org.getOrg(), tenant.getTenant(), userCreateRequest.getUsername());
@@ -265,42 +195,6 @@ public class UserService {
 
         userRepository.saveAndFlush(user);
         return new IdentityResponse(uuid);
-    }
-
-    private void updateUser(UserUpdateRequest userUpdateRequest, Optional<User> userOptional) {
-
-        if (!userOptional.isPresent()) {
-            throw new ResourceNotFoundException("User not found.");
-        }
-
-        User user = userOptional.get();
-        mapUserUpdateRequestToUserEntity(userUpdateRequest, user);
-        userRepository.save(user);
-    }
-
-    private void deleteUser(String id, Optional<User> userOptional) {
-
-        if (!userOptional.isPresent()) {
-            throw new ResourceNotFoundException("User not found.");
-        }
-
-        userRepository.deleteById(id);
-    }
-
-    private UserResponse buildUserResponse(User user) {
-
-        return UserResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .displayName(user.getDisplayName())
-                .imageUrl(user.getImageUrl())
-                .timezoneId(user.getTimezoneId())
-                .preferredLanguage(user.getPreferredLanguage())
-                .roles(user.getRoles().stream().map(role -> role.getRole()).collect(Collectors.toSet()))
-                .enabled(user.isEnabled())
-                .build();
     }
 
     private void mapUserCreateRequestToUserEntity(UserCreateRequest userCreateRequest, User user) {
@@ -334,4 +228,136 @@ public class UserService {
 
     }
 
+    /**
+     * Create User by admin.
+     *
+     * @param userCreateRequest the user create request
+     * @return the user's id
+     */
+    @Secured(ROLE_ADMIN)
+    public IdentityResponse create(UserCreateRequest userCreateRequest) {
+
+        Optional<SecurityUtil.AuthenticatedUser> authenticatedUser = securityUtil.getAuthenticatedUser();
+        if (!authenticatedUser.isPresent()) {
+            throw new UnautherizedException("User not authenticated.");
+        }
+
+        Org org = orgRepository.getOne(authenticatedUser.get().getOrg());
+        Tenant tenant = tenantRepository.getOne(authenticatedUser.get().getTenant());
+
+        return getIdentityResponse(userCreateRequest, org, tenant);
+    }
+
+    /**
+     * Create public User.
+     *
+     * @param publicUserCreateRequest the user create request
+     * @return the user's id
+     */
+    public IdentityResponse create(PublicUserCreateRequest publicUserCreateRequest) {
+
+        if (!orgRepository.existsByOrg(publicUserCreateRequest.getOrg())) {
+            throw new ValidationException("Org not found.");
+        }
+
+        if (!tenantRepository.existsByOrgOrgAndTenant(publicUserCreateRequest.getOrg(),
+                publicUserCreateRequest.getTenant())) {
+            throw new ValidationException("Tenant not found.");
+        }
+
+        boolean isExist = isExist(publicUserCreateRequest.getOrg(), publicUserCreateRequest.getTenant(),
+                publicUserCreateRequest.getUsername());
+        if (isExist) {
+            throw new ValidationException("Username '" + publicUserCreateRequest.getUsername() + "' already taken.");
+        }
+
+        String uuid = uuidUtil.getUuid();
+
+        User user = new User();
+        user.setId(uuid);
+        user.setOrg(orgRepository.getByOrg(publicUserCreateRequest.getOrg()));
+        user.setTenant(tenantRepository.getByTenant(publicUserCreateRequest.getTenant()));
+        user.setUsername(publicUserCreateRequest.getUsername());
+        user.setDisplayName(publicUserCreateRequest.getUsername());
+        user.setPassword(bCryptPasswordEncoder.encode(publicUserCreateRequest.getPassword()));
+        user.setEnabled(publicUserCreateRequest.isEnabled());
+        user.setRoles(Collections.singleton(roleRepository.findByRole("USER").get()));
+        userRepository.saveAndFlush(user);
+
+        return new IdentityResponse(uuid);
+    }
+
+    public boolean isExist(String org, String tenant, String username) {
+        return userRepository.isExist(org, tenant, username);
+    }
+
+    /**
+     * Update User by super admin.
+     *
+     * @param orgId             the org id
+     * @param tenantId          the tenant id
+     * @param userId            the user id
+     * @param userUpdateRequest the user update request
+     */
+    @Secured(ROLE_SUPERADMIN)
+    public void update(String orgId, String tenantId, String userId, UserUpdateRequest userUpdateRequest) {
+        updateUser(userUpdateRequest, userRepository.findByOrgIdAndTenantIdAndId(orgId, tenantId, userId));
+    }
+
+    private void updateUser(UserUpdateRequest userUpdateRequest, Optional<User> userOptional) {
+
+        if (!userOptional.isPresent()) {
+            throw new ResourceNotFoundException("User not found.");
+        }
+
+        User user = userOptional.get();
+        mapUserUpdateRequestToUserEntity(userUpdateRequest, user);
+        userRepository.save(user);
+    }
+
+    /**
+     * Update User by admin.
+     *
+     * @param userId            the user id
+     * @param userUpdateRequest the user update request
+     */
+    @Secured(ROLE_ADMIN)
+    public void update(String userId, UserUpdateRequest userUpdateRequest) {
+        updateUser(userUpdateRequest, userRepository.findById(userId));
+    }
+
+    /**
+     * Delete User by super admin.
+     *
+     * @param orgId    the org id
+     * @param tenantId the tenant id
+     * @param userId   the user id
+     */
+    @Secured(ROLE_SUPERADMIN)
+    public void delete(String orgId, String tenantId, String userId) {
+        deleteUser(userId, userRepository.findByOrgIdAndTenantIdAndId(orgId, tenantId, userId));
+    }
+
+    private void deleteUser(String id, Optional<User> userOptional) {
+
+        if (!userOptional.isPresent()) {
+            throw new ResourceNotFoundException("User not found.");
+        }
+
+        userRepository.deleteById(id);
+    }
+
+    /**
+     * Delete User by admin.
+     *
+     * @param userId the user id
+     */
+    @Secured(ROLE_ADMIN)
+    public void delete(String userId) {
+        deleteUser(userId, userRepository.findById(userId));
+    }
+
+    // TODO: validate activation token and enable user
+    public void activatePublicUser(String userId, String activationToken) {
+    }
 }

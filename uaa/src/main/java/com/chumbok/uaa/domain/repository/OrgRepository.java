@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface OrgRepository extends JpaRepository<Org, String> {
 
     boolean existsByOrg(String org);
+
+    Org getByOrg(String org);
 }

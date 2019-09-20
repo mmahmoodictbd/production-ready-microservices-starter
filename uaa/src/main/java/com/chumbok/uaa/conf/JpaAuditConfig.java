@@ -47,7 +47,8 @@ public class JpaAuditConfig {
 
         @Override
         public Optional<String> getCurrentAuditor() {
-            return Optional.of(securityUtil.getAuthenticatedUser().get().getUsername());
+            Optional<String> authenticatedUser = securityUtil.findAuthenticatedUsername();
+            return authenticatedUser.isPresent() ? authenticatedUser : Optional.of("System");
         }
     }
 }

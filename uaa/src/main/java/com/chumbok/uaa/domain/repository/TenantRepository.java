@@ -23,6 +23,9 @@ public interface TenantRepository extends JpaRepository<Tenant, String> {
     @Query("SELECT count(t) > 0 FROM Tenant t WHERE t.org.id = ?1 AND t.tenant = ?2")
     boolean isTenantExist(String orgId, String tenant);
 
+    boolean existsByOrgOrgAndTenant(String org, String tenant);
+
     void deleteAllByOrgId(String orgId);
 
+    Tenant getByTenant(String tenant);
 }
