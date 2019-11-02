@@ -281,7 +281,17 @@ public class UserService {
         user.setDisplayName(publicUserCreateRequest.getUsername());
         user.setPassword(bCryptPasswordEncoder.encode(publicUserCreateRequest.getPassword()));
         user.setEnabled(publicUserCreateRequest.isEnabled());
-        user.setRoles(Collections.singleton(roleRepository.findByRole("USER").get()));
+
+        Set<Role> roles = new HashSet<>();
+        for (String role : publicUserCreateRequest.getRoles()) {
+            Optional<Role> roleOptional = roleRepository.findByRole(role);
+            if (!roleOptional.isPresent()) {
+                throw new ValidationException("Role '" + role + "' does not exist.");
+            }
+            roles.add(roleOptional.get());
+        }
+        user.setRoles(roles);
+
         userRepository.saveAndFlush(user);
 
         return new IdentityResponse(uuid);

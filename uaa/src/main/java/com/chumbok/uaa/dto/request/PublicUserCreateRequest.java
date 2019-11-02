@@ -5,6 +5,8 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -25,6 +27,8 @@ public class PublicUserCreateRequest {
     @NotNull
     @Size(min = 5, max = 255)
     private String password;
+
+    private Set<String> roles = new HashSet<>();
 
     private boolean enabled;
 }
