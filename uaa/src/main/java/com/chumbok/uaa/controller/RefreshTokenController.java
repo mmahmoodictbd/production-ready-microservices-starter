@@ -3,6 +3,7 @@ package com.chumbok.uaa.controller;
 import com.chumbok.testable.common.CookieUtil;
 import com.chumbok.testable.common.UrlUtil;
 import com.chumbok.uaa.security.AuthTokenBuilder;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,29 +25,14 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @Slf4j
 @RestController
+@AllArgsConstructor
 public class RefreshTokenController {
 
     private static final String AUTH_COOKIE_NAME = "Authorization";
 
-
     private final CookieUtil cookieUtil;
     private final UrlUtil urlUtil;
     private final AuthTokenBuilder authTokenBuilder;
-
-    /**
-     * Instantiates a new Refresh token controller.
-     *
-     * @param authTokenBuilder the auth token builder
-     * @param cookieUtil       the cookie util
-     * @param urlUtil          the url util
-     */
-    public RefreshTokenController(final AuthTokenBuilder authTokenBuilder,
-                                  final CookieUtil cookieUtil, final UrlUtil urlUtil) {
-
-        this.cookieUtil = cookieUtil;
-        this.urlUtil = urlUtil;
-        this.authTokenBuilder = authTokenBuilder;
-    }
 
     /**
      * Handle refresh token request.
@@ -76,6 +62,4 @@ public class RefreshTokenController {
 
         return new ResponseEntity<>(Collections.singletonMap("accessToken", authToken), HttpStatus.OK);
     }
-
-
 }

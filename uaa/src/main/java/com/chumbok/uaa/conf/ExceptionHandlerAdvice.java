@@ -20,7 +20,7 @@ public class ExceptionHandlerAdvice extends AbstractExceptionHandlerAdvice {
         super();
         registerMapping(AuthTokenConsumeException.class, "UNAUTHORIZED_REQUEST", "Could not authenticate.", UNAUTHORIZED);
     }
-    
+
     @ResponseBody
     @ExceptionHandler(Throwable.class)
     public ErrorResponse getErrorResponse(final Throwable ex, final HttpServletResponse response) {

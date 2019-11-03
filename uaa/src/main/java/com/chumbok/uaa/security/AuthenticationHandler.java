@@ -16,6 +16,7 @@ public interface AuthenticationHandler extends AuthenticationSuccessHandler, Aut
 
     /**
      * Run on successful authentication.
+     *
      * @param request
      * @param response
      * @param authentication
@@ -24,6 +25,7 @@ public interface AuthenticationHandler extends AuthenticationSuccessHandler, Aut
 
     /**
      * Run on failed authentication.
+     *
      * @param request
      * @param response
      * @param ex
@@ -32,6 +34,7 @@ public interface AuthenticationHandler extends AuthenticationSuccessHandler, Aut
 
     /**
      * Run on successful logout.
+     *
      * @param request
      * @param response
      * @param authentication

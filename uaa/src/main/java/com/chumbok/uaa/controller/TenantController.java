@@ -6,6 +6,7 @@ import com.chumbok.uaa.dto.response.IdentityResponse;
 import com.chumbok.uaa.dto.response.TenantResponse;
 import com.chumbok.uaa.dto.response.TenantsResponse;
 import com.chumbok.uaa.service.TenantService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -29,18 +30,10 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequestMapping("/orgs/{orgId}/tenants")
+@AllArgsConstructor
 public class TenantController {
 
     private final TenantService tenantService;
-
-    /**
-     * Construct TenantController with TenantService.
-     *
-     * @param tenantService the tenant service
-     */
-    public TenantController(TenantService tenantService) {
-        this.tenantService = tenantService;
-    }
 
     /**
      * Get tenant page.
@@ -100,5 +93,4 @@ public class TenantController {
         tenantService.deleteTenant(orgId, tenantId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
-
 }

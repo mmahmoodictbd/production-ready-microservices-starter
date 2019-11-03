@@ -76,6 +76,7 @@ public class SecurityConfig extends AbstractSecurityConfig {
 
     /**
      * Set AuthTokenParser to super class so that auth token can be consumed.
+     *
      * @param authTokenParser
      */
     @Autowired
@@ -101,6 +102,7 @@ public class SecurityConfig extends AbstractSecurityConfig {
 
     /**
      * Set SecurityProperties to super class so that auth token can be consumed.
+     *
      * @param securityProperties
      */
     @Autowired
@@ -111,6 +113,7 @@ public class SecurityConfig extends AbstractSecurityConfig {
 
     /**
      * Set CorsFilter to super class so that CORS filter is enabled.
+     *
      * @param corsFilters
      */
     @Autowired

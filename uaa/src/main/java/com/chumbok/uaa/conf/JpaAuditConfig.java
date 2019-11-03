@@ -1,6 +1,7 @@
 package com.chumbok.uaa.conf;
 
 import com.chumbok.security.util.SecurityUtil;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -14,18 +15,10 @@ import java.util.Optional;
 @Configuration
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @EnableJpaAuditing
+@AllArgsConstructor
 public class JpaAuditConfig {
 
     private final SecurityUtil securityUtil;
-
-    /**
-     * Construct JpaAuditConfig with SecurityUtil which provides authenticated user's username.
-     *
-     * @param securityUtil
-     */
-    public JpaAuditConfig(SecurityUtil securityUtil) {
-        this.securityUtil = securityUtil;
-    }
 
     @Bean
     public AuditorAware<String> auditorProvider() {

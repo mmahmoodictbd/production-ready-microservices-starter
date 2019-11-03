@@ -6,11 +6,16 @@ import com.chumbok.security.util.SecurityUtil.AuthenticatedUser;
 import com.chumbok.uaa.domain.model.User;
 import com.chumbok.uaa.domain.repository.UserRepository;
 import com.chumbok.uaa.dto.response.LoggedInUserInfoResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Provide logged in user preferences.
+ */
 @Service
+@AllArgsConstructor
 public class UserPreferenceService {
 
     private static final String PROFILE_PIC_28x28_URL_KEY = "profilePicture28x28Url";
@@ -21,11 +26,6 @@ public class UserPreferenceService {
     private final UserRepository userRepository;
     private final SecurityUtil securityUtil;
 
-    public UserPreferenceService(UserRepository userRepository, SecurityUtil securityUtil) {
-        this.userRepository = userRepository;
-        this.securityUtil = securityUtil;
-    }
-
     public LoggedInUserInfoResponse getLoggedInUserInfo() {
 
         Optional<AuthenticatedUser> authenticatedUserOptional = securityUtil.getAuthenticatedUser();
@@ -35,7 +35,7 @@ public class UserPreferenceService {
 
         AuthenticatedUser authenticatedUser = authenticatedUserOptional.get();
 
-        if(!userRepository.isExist(authenticatedUser.getOrg(), authenticatedUser.getTenant(),
+        if (!userRepository.isExist(authenticatedUser.getOrg(), authenticatedUser.getTenant(),
                 authenticatedUser.getUsername())) {
             throw new UnautherizedException("User not exist in the system.");
         }

@@ -16,6 +16,4 @@ public class MappingConfig {
 
         return mapper;
     }
-
-
 }

@@ -7,6 +7,7 @@ import com.chumbok.uaa.dto.response.IdentityResponse;
 import com.chumbok.uaa.dto.response.UserResponse;
 import com.chumbok.uaa.dto.response.UsersResponse;
 import com.chumbok.uaa.service.UserService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -31,18 +32,10 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequestMapping("/orgs/{orgId}/tenants/{tenantId}/users")
+@AllArgsConstructor
 public class TenantUserController {
 
     private final UserService userService;
-
-    /**
-     * Construct UserController with UserService.
-     *
-     * @param userService the user service
-     */
-    public TenantUserController(UserService userService) {
-        this.userService = userService;
-    }
 
     /**
      * Get all user page.

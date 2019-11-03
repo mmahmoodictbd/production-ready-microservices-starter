@@ -2,6 +2,7 @@ package com.chumbok.uaa.controller;
 
 import com.chumbok.uaa.dto.response.LoggedInUserInfoResponse;
 import com.chumbok.uaa.service.UserPreferenceService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,13 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
+@AllArgsConstructor
 public class LoggedInUserInfoController {
 
-    private UserPreferenceService userPreferenceService;
-
-    public LoggedInUserInfoController(UserPreferenceService userPreferenceService) {
-        this.userPreferenceService = userPreferenceService;
-    }
+    private final UserPreferenceService userPreferenceService;
 
     @GetMapping(value = "/me")
     public LoggedInUserInfoResponse me() {

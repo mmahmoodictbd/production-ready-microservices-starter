@@ -2,6 +2,7 @@ package com.chumbok.uaa.security;
 
 import com.chumbok.uaa.domain.model.User;
 import com.chumbok.uaa.domain.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,21 +15,18 @@ import java.util.stream.Collectors;
 
 /**
  * Implementation of UserDetailsService to load UserDetails based on org, tenant and username.
- *
  */
 @Service("userDetailsService")
+@AllArgsConstructor
 public class MultiTenantUserDetailsService implements UserDetailsService {
 
     private UserRepository userRepository;
-
-    public MultiTenantUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     /**
      * In this method, username parameter split into org, tenant and username, use those to search in userRepository.
      * UsernamePasswordAuthenticationToken is created in com.chumbok.uaa.controller.LoginController merged
      * org, tenant and username into UsernamePasswordAuthenticationToken's username.
+     *
      * @param username is combination of org, tenant and username
      * @return
      * @throws UsernameNotFoundException

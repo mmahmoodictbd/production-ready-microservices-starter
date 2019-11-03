@@ -4,9 +4,10 @@ package com.chumbok.uaa.controller;
 import com.chumbok.exception.presentation.BadRequestException;
 import com.chumbok.testable.common.CookieUtil;
 import com.chumbok.testable.common.UrlUtil;
+import com.chumbok.uaa.dto.request.LoginRequest;
 import com.chumbok.uaa.security.AuthTokenBuilder;
 import com.chumbok.uaa.security.AuthenticationHandler;
-import com.chumbok.uaa.security.LoginRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,6 +37,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 @RestController
 @RequestMapping("/login")
+@AllArgsConstructor
 public class LoginController {
 
     private static final String AUTH_COOKIE_NAME = "Authorization";
@@ -46,26 +48,6 @@ public class LoginController {
 
     private final UrlUtil urlUtil;
     private final CookieUtil cookieUtil;
-
-    /**
-     * LoginController constructor with necessary dependencies.
-     *
-     * @param authenticationManager the authentication manager
-     * @param authenticationHandler the authentication handler
-     * @param authTokenBuilder      the auth token builder
-     * @param urlUtil               the url util
-     * @param cookieUtil            the cookie util
-     */
-    public LoginController(final AuthenticationManager authenticationManager,
-                           final AuthenticationHandler authenticationHandler,
-                           final AuthTokenBuilder authTokenBuilder,
-                           final UrlUtil urlUtil, final CookieUtil cookieUtil) {
-        this.authenticationManager = authenticationManager;
-        this.authenticationHandler = authenticationHandler;
-        this.authTokenBuilder = authTokenBuilder;
-        this.urlUtil = urlUtil;
-        this.cookieUtil = cookieUtil;
-    }
 
     /**
      * Handle login request.
@@ -124,7 +106,6 @@ public class LoginController {
         return Collections.singletonMap("accessToken", authToken);
     }
 
-
     private UsernamePasswordAuthenticationToken buildUsernamePasswordAuthenticationToken(
             String org, String tenant, String username, String password) {
 
@@ -150,6 +131,4 @@ public class LoginController {
         }
         session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
     }
-
-
 }

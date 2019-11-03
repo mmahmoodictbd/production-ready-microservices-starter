@@ -2,6 +2,7 @@ package com.chumbok.uaa.controller;
 
 import com.chumbok.testable.common.CookieUtil;
 import com.chumbok.uaa.security.AuthenticationHandler;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,23 +20,13 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Slf4j
 @RestController
+@AllArgsConstructor
 public class LogoutController {
 
     private static final String AUTH_COOKIE_NAME = "Authorization";
 
     private final AuthenticationHandler authenticationHandler;
     private final CookieUtil cookieUtil;
-
-    /**
-     * Instantiates a new Logout controller.
-     *
-     * @param authenticationHandler the authentication handler
-     * @param cookieUtil            the cookie util
-     */
-    public LogoutController(final AuthenticationHandler authenticationHandler, final CookieUtil cookieUtil) {
-        this.authenticationHandler = authenticationHandler;
-        this.cookieUtil = cookieUtil;
-    }
 
     /**
      * Handle logout request.

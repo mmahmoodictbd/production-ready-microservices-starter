@@ -12,6 +12,7 @@ import com.chumbok.uaa.dto.request.TenantCreateUpdateRequest;
 import com.chumbok.uaa.dto.response.IdentityResponse;
 import com.chumbok.uaa.dto.response.TenantResponse;
 import com.chumbok.uaa.dto.response.TenantsResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
@@ -28,28 +29,13 @@ import static com.chumbok.uaa.security.DefaultSecurityRoleConstants.ROLE_SUPERAD
  * Handles TENANT related APIs
  */
 @Service
+@AllArgsConstructor
 public class TenantService {
 
     private final OrgRepository orgRepository;
     private final TenantRepository tenantRepository;
     private final UserRepository userRepository;
     private final UuidUtil uuidUtil;
-
-    /**
-     * Instantiates a new Tenant service.
-     *
-     * @param orgRepository    the org repository
-     * @param tenantRepository the tenant repository
-     * @param userRepository   the user repository
-     * @param uuidUtil         the uuid util
-     */
-    public TenantService(OrgRepository orgRepository, TenantRepository tenantRepository,
-                         UserRepository userRepository, UuidUtil uuidUtil) {
-        this.orgRepository = orgRepository;
-        this.tenantRepository = tenantRepository;
-        this.userRepository = userRepository;
-        this.uuidUtil = uuidUtil;
-    }
 
     /**
      * Gets tenants page.
@@ -98,18 +84,12 @@ public class TenantService {
     @Transactional(readOnly = true)
     public TenantResponse getTenant(String orgId, String tenantId) {
 
-        Optional<Org> orgOptional = orgRepository.findById(orgId);
+        Tenant tenant = getOrThrow(tenantId);
 
-        if (!orgOptional.isPresent()) {
-            throw new ResourceNotFoundException("Org not found.");
+        if (!tenant.getOrg().getId().equals(orgId)) {
+            throw new ResourceNotFoundException("Org or Tenant not found.");
         }
 
-        Optional<Tenant> tenantOptional = tenantRepository.findById(tenantId);
-        if (!tenantOptional.isPresent()) {
-            throw new ResourceNotFoundException("Tenant not found.");
-        }
-
-        Tenant tenant = tenantOptional.get();
         return TenantResponse.builder()
                 .id(tenant.getId())
                 .name(tenant.getTenant())
@@ -155,19 +135,23 @@ public class TenantService {
     @Secured(ROLE_SUPERADMIN)
     public void deleteTenant(String orgId, String tenantId) {
 
-        Optional<Org> orgOptional = orgRepository.findById(orgId);
+        Tenant tenant = getOrThrow(tenantId);
 
-        if (!orgOptional.isPresent()) {
-            throw new ResourceNotFoundException("Org not found.");
-        }
-
-        Optional<Tenant> tenantOptional = tenantRepository.findById(tenantId);
-        if (!tenantOptional.isPresent()) {
-            throw new ResourceNotFoundException("Tenant not found.");
+        if (!tenant.getOrg().getId().equals(orgId)) {
+            throw new ResourceNotFoundException("Org or Tenant not found.");
         }
 
         userRepository.deleteAllByOrgIdAndTenantId(orgId, tenantId);
         tenantRepository.deleteById(tenantId);
     }
 
+    private Tenant getOrThrow(String tenantId) {
+
+        Optional<Tenant> tenantOptional = tenantRepository.findById(tenantId);
+        if (!tenantOptional.isPresent()) {
+            throw new ResourceNotFoundException("Tenant not found.");
+        }
+
+        return tenantOptional.get();
+    }
 }

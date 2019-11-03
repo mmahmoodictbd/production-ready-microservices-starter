@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -69,43 +68,6 @@ public class UserService {
         return getUsersResponse(userRepository.findAllByOrgIdAndTenantId(orgId, tenantId, pageable));
     }
 
-    private UsersResponse getUsersResponse(Page<User> userPage) {
-
-        long totalElements = userPage.getTotalElements();
-        int totalPage = userPage.getTotalPages();
-        int size = userPage.getSize();
-        int page = userPage.getNumber();
-
-        List<UserResponse> userResponseList = new ArrayList<>();
-        for (User user : userPage.getContent()) {
-            userResponseList.add(buildUserResponse(user));
-        }
-
-        return UsersResponse.builder()
-                .items(userResponseList)
-                .page(page)
-                .size(size)
-                .totalPages(totalPage)
-                .totalElements(totalElements)
-                .build();
-    }
-
-    private UserResponse buildUserResponse(User user) {
-
-        return UserResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .displayName(user.getDisplayName())
-                .imageUrl(user.getImageUrl())
-                .timezoneId(user.getTimezoneId())
-                .preferredLanguage(user.getPreferredLanguage())
-                .roles(user.getRoles().stream().map(role -> role.getRole()).collect(Collectors.toSet()))
-                .enabled(user.isEnabled())
-                .build();
-    }
-
     /**
      * Gets user's page by admin.
      *
@@ -130,15 +92,6 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponse getUser(String orgId, String tenantId, String id) {
         return getUserResponse(userRepository.findByOrgIdAndTenantIdAndId(orgId, tenantId, id));
-    }
-
-    private UserResponse getUserResponse(Optional<User> userOptional) {
-
-        if (!userOptional.isPresent()) {
-            throw new ResourceNotFoundException("User not found.");
-        }
-
-        return buildUserResponse(userOptional.get());
     }
 
     /**
@@ -175,57 +128,6 @@ public class UserService {
         }
 
         return getIdentityResponse(userCreateRequest, orgOptional.get(), tenantOptional.get());
-    }
-
-    private IdentityResponse getIdentityResponse(UserCreateRequest userCreateRequest, Org org, Tenant tenant) {
-
-        boolean isExist = userRepository.isExist(org.getOrg(), tenant.getTenant(), userCreateRequest.getUsername());
-        if (isExist) {
-            throw new ValidationException("Username '" + userCreateRequest.getUsername() + "' already taken.");
-        }
-
-        String uuid = uuidUtil.getUuid();
-
-        User user = new User();
-        user.setId(uuid);
-        user.setOrg(org);
-        user.setTenant(tenant);
-
-        mapUserCreateRequestToUserEntity(userCreateRequest, user);
-
-        userRepository.saveAndFlush(user);
-        return new IdentityResponse(uuid);
-    }
-
-    private void mapUserCreateRequestToUserEntity(UserCreateRequest userCreateRequest, User user) {
-
-        user.setUsername(userCreateRequest.getUsername());
-        user.setPassword(bCryptPasswordEncoder.encode(userCreateRequest.getPassword()));
-        mapUserUpdateRequestToUserEntity(userCreateRequest, user);
-
-    }
-
-    private void mapUserUpdateRequestToUserEntity(UserUpdateRequest userUpdateRequest, User user) {
-
-        user.setFirstName(userUpdateRequest.getFirstName());
-        user.setLastName(userUpdateRequest.getLastName());
-        user.setDisplayName(userUpdateRequest.getDisplayName());
-        user.setImageUrl(userUpdateRequest.getImageUrl());
-        user.setTimezoneId(userUpdateRequest.getTimezoneId());
-        user.setPreferredLanguage(userUpdateRequest.getPreferredLanguage());
-
-        Set<Role> roles = new HashSet<>();
-        for (String role : userUpdateRequest.getRoles()) {
-            Optional<Role> roleOptional = roleRepository.findByRole(role);
-            if (!roleOptional.isPresent()) {
-                throw new ValidationException("Role '" + role + "' does not exist.");
-            }
-            roles.add(roleOptional.get());
-        }
-        user.setRoles(roles);
-
-        user.setEnabled(userUpdateRequest.isEnabled());
-
     }
 
     /**
@@ -281,16 +183,7 @@ public class UserService {
         user.setDisplayName(publicUserCreateRequest.getUsername());
         user.setPassword(bCryptPasswordEncoder.encode(publicUserCreateRequest.getPassword()));
         user.setEnabled(publicUserCreateRequest.isEnabled());
-
-        Set<Role> roles = new HashSet<>();
-        for (String role : publicUserCreateRequest.getRoles()) {
-            Optional<Role> roleOptional = roleRepository.findByRole(role);
-            if (!roleOptional.isPresent()) {
-                throw new ValidationException("Role '" + role + "' does not exist.");
-            }
-            roles.add(roleOptional.get());
-        }
-        user.setRoles(roles);
+        user.setRoles(getRolesOrThrow(publicUserCreateRequest.getRoles()));
 
         userRepository.saveAndFlush(user);
 
@@ -312,17 +205,6 @@ public class UserService {
     @Secured(ROLE_SUPERADMIN)
     public void update(String orgId, String tenantId, String userId, UserUpdateRequest userUpdateRequest) {
         updateUser(userUpdateRequest, userRepository.findByOrgIdAndTenantIdAndId(orgId, tenantId, userId));
-    }
-
-    private void updateUser(UserUpdateRequest userUpdateRequest, Optional<User> userOptional) {
-
-        if (!userOptional.isPresent()) {
-            throw new ResourceNotFoundException("User not found.");
-        }
-
-        User user = userOptional.get();
-        mapUserUpdateRequestToUserEntity(userUpdateRequest, user);
-        userRepository.save(user);
     }
 
     /**
@@ -348,15 +230,6 @@ public class UserService {
         deleteUser(userId, userRepository.findByOrgIdAndTenantIdAndId(orgId, tenantId, userId));
     }
 
-    private void deleteUser(String id, Optional<User> userOptional) {
-
-        if (!userOptional.isPresent()) {
-            throw new ResourceNotFoundException("User not found.");
-        }
-
-        userRepository.deleteById(id);
-    }
-
     /**
      * Delete User by admin.
      *
@@ -369,5 +242,122 @@ public class UserService {
 
     // TODO: validate activation token and enable user
     public void activatePublicUser(String userId, String activationToken) {
+    }
+
+    private IdentityResponse getIdentityResponse(UserCreateRequest userCreateRequest, Org org, Tenant tenant) {
+
+        boolean isExist = userRepository.isExist(org.getOrg(), tenant.getTenant(), userCreateRequest.getUsername());
+        if (isExist) {
+            throw new ValidationException("Username '" + userCreateRequest.getUsername() + "' already taken.");
+        }
+
+        String uuid = uuidUtil.getUuid();
+
+        User user = new User();
+        user.setId(uuid);
+        user.setOrg(org);
+        user.setTenant(tenant);
+
+        mapUserCreateRequestToUserEntity(userCreateRequest, user);
+
+        userRepository.saveAndFlush(user);
+        return new IdentityResponse(uuid);
+    }
+
+    private void mapUserCreateRequestToUserEntity(UserCreateRequest userCreateRequest, User user) {
+
+        user.setUsername(userCreateRequest.getUsername());
+        user.setPassword(bCryptPasswordEncoder.encode(userCreateRequest.getPassword()));
+        mapUserUpdateRequestToUserEntity(userCreateRequest, user);
+    }
+
+    private void mapUserUpdateRequestToUserEntity(UserUpdateRequest userUpdateRequest, User user) {
+
+        user.setFirstName(userUpdateRequest.getFirstName());
+        user.setLastName(userUpdateRequest.getLastName());
+        user.setDisplayName(userUpdateRequest.getDisplayName());
+        user.setImageUrl(userUpdateRequest.getImageUrl());
+        user.setTimezoneId(userUpdateRequest.getTimezoneId());
+        user.setPreferredLanguage(userUpdateRequest.getPreferredLanguage());
+        user.setRoles(getRolesOrThrow(userUpdateRequest.getRoles()));
+        user.setEnabled(userUpdateRequest.isEnabled());
+    }
+
+    private UserResponse getUserResponse(Optional<User> userOptional) {
+
+        if (!userOptional.isPresent()) {
+            throw new ResourceNotFoundException("User not found.");
+        }
+
+        return buildUserResponse(userOptional.get());
+    }
+
+    private UsersResponse getUsersResponse(Page<User> userPage) {
+
+        long totalElements = userPage.getTotalElements();
+        int totalPage = userPage.getTotalPages();
+        int size = userPage.getSize();
+        int page = userPage.getNumber();
+
+        List<UserResponse> userResponseList = new ArrayList<>();
+        for (User user : userPage.getContent()) {
+            userResponseList.add(buildUserResponse(user));
+        }
+
+        return UsersResponse.builder()
+                .items(userResponseList)
+                .page(page)
+                .size(size)
+                .totalPages(totalPage)
+                .totalElements(totalElements)
+                .build();
+    }
+
+    private UserResponse buildUserResponse(User user) {
+
+        return UserResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .displayName(user.getDisplayName())
+                .imageUrl(user.getImageUrl())
+                .timezoneId(user.getTimezoneId())
+                .preferredLanguage(user.getPreferredLanguage())
+                .roles(user.getRoles().stream().map(role -> role.getRole()).collect(Collectors.toSet()))
+                .enabled(user.isEnabled())
+                .build();
+    }
+
+    private void updateUser(UserUpdateRequest userUpdateRequest, Optional<User> userOptional) {
+
+        if (!userOptional.isPresent()) {
+            throw new ResourceNotFoundException("User not found.");
+        }
+
+        User user = userOptional.get();
+        mapUserUpdateRequestToUserEntity(userUpdateRequest, user);
+        userRepository.save(user);
+    }
+
+    private void deleteUser(String id, Optional<User> userOptional) {
+
+        if (!userOptional.isPresent()) {
+            throw new ResourceNotFoundException("User not found.");
+        }
+
+        userRepository.deleteById(id);
+    }
+
+    private Set<Role> getRolesOrThrow(Set<String> roles2) {
+        Set<Role> roles = new HashSet<>();
+        for (String role : roles2) {
+            Optional<Role> roleOptional = roleRepository.findByRole(role);
+            if (!roleOptional.isPresent()) {
+                throw new ValidationException("Role '" + role + "' does not exist.");
+            }
+            roles.add(roleOptional.get());
+        }
+        return roles;
     }
 }

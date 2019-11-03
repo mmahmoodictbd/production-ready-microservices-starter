@@ -5,6 +5,7 @@ import com.chumbok.testable.common.DateUtil;
 import com.chumbok.uaa.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.core.Authentication;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
+@AllArgsConstructor
 public class AuthTokenBuilder {
 
     private final AuthJwtProperties authJwtProperties;
@@ -32,22 +34,8 @@ public class AuthTokenBuilder {
     private final JwtUtil jwtUtil;
 
     /**
-     * Construct AuthTokenBuilder.
-     *
-     * @param authJwtProperties
-     * @param dateUtil
-     * @param encryptionKeyUtil
-     */
-    public AuthTokenBuilder(AuthJwtProperties authJwtProperties, EncryptionKeyUtil encryptionKeyUtil,
-                            DateUtil dateUtil, JwtUtil jwtUtil) {
-        this.authJwtProperties = authJwtProperties;
-        this.encryptionKeyUtil = encryptionKeyUtil;
-        this.dateUtil = dateUtil;
-        this.jwtUtil = jwtUtil;
-    }
-
-    /**
      * Creates access tokens from Authentication.
+     *
      * @param authentication
      * @return token.
      */
@@ -62,8 +50,8 @@ public class AuthTokenBuilder {
         String[] orgTenantUsername = principal.split(String.valueOf(Character.LINE_SEPARATOR));
 
         if (orgTenantUsername == null || orgTenantUsername.length != 3) {
-            throw new IllegalStateException("Authentication principle[" + principal
-                    + "] should contain org, tenant and username.");
+            throw new IllegalStateException(
+                    String.format("Authentication principle[%s] should contain org, tenant and username.", principal));
         }
 
         String org = orgTenantUsername[0];
@@ -72,23 +60,23 @@ public class AuthTokenBuilder {
         List<GrantedAuthority> authorities = new ArrayList<>(authentication.getAuthorities());
 
         if (StringUtils.isBlank(org)) {
-            throw new IllegalArgumentException("Authentication principle[" + principal
-                    + "] does not contain org.");
+            throw new IllegalArgumentException(
+                    String.format("Authentication principle[%s] does not contain org.", principal));
         }
 
         if (StringUtils.isBlank(tenant)) {
-            throw new IllegalArgumentException("Authentication principle[" + principal
-                    + "] does not contain tenant.");
+            throw new IllegalArgumentException(
+                    String.format("Authentication principle[%s] does not contain tenant.", principal));
         }
 
         if (StringUtils.isBlank(username)) {
-            throw new IllegalArgumentException("Authentication principle[" + principal
-                    + "] does not contain username.");
+            throw new IllegalArgumentException(
+                    String.format("Authentication principle[%s] does not contain username.", principal));
         }
 
         if (authorities == null || authorities.isEmpty()) {
-            throw new IllegalArgumentException("Authentication principle[" + principal
-                    + "] does not contain authorities.");
+            throw new IllegalArgumentException(
+                    String.format("Authentication principle[%s] does not contain authorities.", principal));
         }
 
         Claims claims = Jwts.claims();
@@ -105,7 +93,6 @@ public class AuthTokenBuilder {
         PrivateKey privateKey = encryptionKeyUtil.loadPrivateKey(authJwtProperties.getTokenSigningPrivateKeyPath());
 
         return jwtUtil.getJwts(claims, authJwtProperties.getTokenIssuer(), issueDate, expiration, privateKey);
-
     }
 
 }

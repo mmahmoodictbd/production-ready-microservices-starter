@@ -1,5 +1,6 @@
 package com.chumbok.uaa.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,13 +14,10 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
+@AllArgsConstructor
 public class VersionController {
 
-    private Environment environment;
-
-    public VersionController(Environment environment) {
-        this.environment = environment;
-    }
+    private final Environment environment;
 
     @GetMapping(value = "/version")
     public Map<String, String> appVersion() {

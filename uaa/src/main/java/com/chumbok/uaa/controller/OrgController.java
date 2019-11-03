@@ -6,6 +6,7 @@ import com.chumbok.uaa.dto.response.IdentityResponse;
 import com.chumbok.uaa.dto.response.OrgResponse;
 import com.chumbok.uaa.dto.response.OrgsResponse;
 import com.chumbok.uaa.service.OrgService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -29,18 +30,10 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequestMapping("/orgs")
+@AllArgsConstructor
 public class OrgController {
 
     private final OrgService orgService;
-
-    /**
-     * Construct OrgController with OrgService.
-     *
-     * @param orgService the org service
-     */
-    public OrgController(OrgService orgService) {
-        this.orgService = orgService;
-    }
 
     /**
      * Get all org page.

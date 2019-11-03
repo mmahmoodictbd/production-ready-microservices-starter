@@ -11,6 +11,7 @@ import com.chumbok.uaa.dto.request.OrgCreateUpdateRequest;
 import com.chumbok.uaa.dto.response.IdentityResponse;
 import com.chumbok.uaa.dto.response.OrgResponse;
 import com.chumbok.uaa.dto.response.OrgsResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
@@ -27,28 +28,13 @@ import static com.chumbok.uaa.security.DefaultSecurityRoleConstants.ROLE_SUPERAD
  * Handles ORG related APIs
  */
 @Service
+@AllArgsConstructor
 public class OrgService {
 
     private final OrgRepository orgRepository;
     private final TenantRepository tenantRepository;
     private final UserRepository userRepository;
     private final UuidUtil uuidUtil;
-
-    /**
-     * Instantiates a new Org service.
-     *
-     * @param orgRepository    the org repository
-     * @param tenantRepository the tenant repository
-     * @param userRepository   the user repository
-     * @param uuidUtil         the uuid util
-     */
-    public OrgService(OrgRepository orgRepository, TenantRepository tenantRepository,
-                      UserRepository userRepository, UuidUtil uuidUtil) {
-        this.orgRepository = orgRepository;
-        this.tenantRepository = tenantRepository;
-        this.userRepository = userRepository;
-        this.uuidUtil = uuidUtil;
-    }
 
     /**
      * Gets pageable orgs.
