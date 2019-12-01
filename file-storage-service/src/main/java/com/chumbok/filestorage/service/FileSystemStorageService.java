@@ -5,9 +5,9 @@ import com.chumbok.exception.presentation.UnautherizedException;
 import com.chumbok.filestorage.domain.model.File;
 import com.chumbok.filestorage.domain.repository.FileRepository;
 import com.chumbok.filestorage.dto.request.StoreFileCreateRequest;
-import com.chumbok.filestorage.dto.response.IdentityResponse;
 import com.chumbok.filestorage.dto.response.FileResponse;
 import com.chumbok.filestorage.dto.response.FilesResponse;
+import com.chumbok.filestorage.dto.response.IdentityResponse;
 import com.chumbok.filestorage.exception.IORuntimeException;
 import com.chumbok.security.util.SecurityUtil;
 import com.chumbok.testable.common.DateUtil;
@@ -15,11 +15,11 @@ import com.chumbok.testable.common.FileSystemUtil;
 import com.chumbok.testable.common.SlugUtil;
 import com.chumbok.testable.common.SystemUtil;
 import com.chumbok.testable.common.UuidUtil;
+import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
@@ -33,11 +33,11 @@ import java.util.Optional;
 /**
  * Load and save resources from file system.
  */
-@Service
+@AllArgsConstructor
 public class FileSystemStorageService implements StorageService {
 
     /**
-     * Directory name where files will be stored under OpenBlog home directory.
+     * Directory name where files will be stored under home directory.
      */
     private static final String FILES_DIR = "files";
 
@@ -45,7 +45,6 @@ public class FileSystemStorageService implements StorageService {
      * File resource URL prefix
      */
     private static final String FILE_URL_PREFIX = "files";
-
 
     private final ResourceLoader resourceLoader;
     private final FileRepository fileRepository;
@@ -55,25 +54,6 @@ public class FileSystemStorageService implements StorageService {
     private final FileSystemUtil fileSystemUtil;
     private final SlugUtil slugUtil;
     private final SecurityUtil securityUtil;
-
-
-    public FileSystemStorageService(ResourceLoader resourceLoader,
-                                    FileRepository fileRepository,
-                                    DateUtil dateUtil,
-                                    UuidUtil uuidUtil,
-                                    SystemUtil systemUtil,
-                                    FileSystemUtil fileSystemUtil,
-                                    SlugUtil slugUtil,
-                                    SecurityUtil securityUtil) {
-        this.resourceLoader = resourceLoader;
-        this.fileRepository = fileRepository;
-        this.dateUtil = dateUtil;
-        this.uuidUtil = uuidUtil;
-        this.systemUtil = systemUtil;
-        this.fileSystemUtil = fileSystemUtil;
-        this.slugUtil = slugUtil;
-        this.securityUtil = securityUtil;
-    }
 
     public FilesResponse listByPage(Pageable pageable) {
 
