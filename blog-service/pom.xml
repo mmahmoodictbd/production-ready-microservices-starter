@@ -21,7 +21,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <modelmapper.version>2.3.0</modelmapper.version>
+        <modelmapper.version>2.3.7</modelmapper.version>
         <jsoup.version>1.11.3</jsoup.version>
     </properties>
 
